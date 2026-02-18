@@ -1,3 +1,4 @@
+
 # 结构生物信息学数据库导航与可视化
 
 > ⚠️ **说明**：本项目内容由 AI (GitHub Copilot) 基于结构生物信息学领域知识自动生成并整理，目的是为研究者提供快速的数据库导航参考。**数据库链接和官方网站信息均指向真实可用的官方资源，但请以各官方网站的最新信息为准。**
@@ -58,6 +59,7 @@
 ### 在线访问（GitHub Pages）
 直接点击以下链接即可在浏览器中打开：
 
+- 🏠 [**主页导航**](https://PWO-CHINA.github.io/structural-bioinformatics-databases/) — 推荐入口，包含统计概览与分类导航
 - 🔍 [数据库检索系统](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-searchable.html)
 - 📚 [数据库导航平台](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-navigator.html)  
 - ⏳ [数据库演进时间线](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-timeline.html)
