@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结构生物信息学数据库导航</title>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+        const databaseData = [
+            {
+                type: "通用库",
+                name: "PDB",
+                fullName: "Protein Data Bank",
+                url: "https://www.wwpdb.org/",
+                dataType: "三维坐标、实验参数、密度图",
+                function: "标准化三维结构数据库，AI 训练基石",
+                services: [
+                    "高级搜索 (ID/作者/配体)",
+                    "BLAST 同源序列搜索",
+                    "Mol* 在线 3D 可视化",
+                    "结构比对与叠合分析"
+                ],
+                scenario: "基础研究、结构生物学、AI模型训练"
+            },
+            {
+                type: "通用库",
+                name: "EMDB",
+                fullName: "Electron Microscopy Data Bank",
+                url: "https://www.ebi.ac.uk/emdb/",
+                dataType: "冷冻电镜三维密度图及元数据",
+                function: "冷冻电镜解析结果存储",
+                services: [
+                    "三维电子密度图存档与分发",
+                    "显微图像元数据记录",
+                    "结构模型互链 (Link to PDB)",
+                    "分辨率统计与验证报告"
+                ],
+                scenario: "结构解析算法开发、冷冻电镜方法学开发"
+            },
+            {
+                type: "分类库",
+                name: "SCOP",
+                fullName: "Structural Classification of Proteins",
+                url: "https://scop.berkeley.edu/",
+                dataType: "蛋白质家族、结构域分类",
+                function: "结构进化关系分类权威",
+                services: [
+                    "专家手工审核分类",
+                    "进化同源路径树状浏览",
+                    "结构域边界精确定义"
+                ],
+                scenario: "结构与进化关系、辅助结构预测"
+            },
+            {
+                type: "注释库",
+                name: "Pfam",
+                fullName: "Protein Families",
+                url: "https://www.ebi.ac.uk/interpro/",
+                dataType: "多序列比对、HMM 模型",
+                function: "家族与功能域识别",
+                services: [
+                    "HMM 隐马尔可夫模型搜索",
+                    "蛋白质结构域架构分析",
+                    "物种分布树状图"
+                ],
+                scenario: "结构域注释、进化研究"
+            },
+            {
+                type: "综合库",
+                name: "UniProt",
+                fullName: "Universal Protein Resource",
+                url: "https://www.uniprot.org/",
+                dataType: "序列、结构、功能、文献",
+                function: "核心综合性知识库",
+                services: [
+                    "BLAST 序列比对",
+                    "ID 映射 (Mapping) 服务",
+                    "变异与修饰位点查看"
+                ],
+                scenario: "生物学全方位信息查询"
+            }
+        ];
+
+        const typeColors = {
+            "通用库": "bg-blue-100 text-blue-800 border-blue-200",
+            "分类库": "bg-indigo-100 text-indigo-800 border-indigo-200",
+            "注释库": "bg-purple-100 text-purple-800 border-purple-200",
+            "综合库": "bg-green-100 text-green-800 border-green-200"
+        };
+
+        const App = () => {
+            const [searchTerm, setSearchTerm] = useState("");
+            const [selectedType, setSelectedType] = useState("全部");
+
+            const types = ["全部", ...new Set(databaseData.map(d => d.type))];
+
+            const filteredData = databaseData.filter(item => {
+                if (selectedType !== "全部" && item.type !== selectedType) return false;
+                if (searchTerm) {
+                    const lowerTerm = searchTerm.toLowerCase();
+                    return item.name.toLowerCase().includes(lowerTerm) ||
+                           item.function.toLowerCase().includes(lowerTerm) ||
+                           item.services.some(s => s.toLowerCase().includes(lowerTerm));
+                }
+                return true;
+            });
+
+            return (
+                <div className="min-h-screen pb-12">
+                    <div className="glass-header sticky top-0 z-50">
+                        <div className="max-w-5xl mx-auto px-6 py-6">
+                            <div>
+                                <h1 className="text-2xl font-bold text-slate-800">
+                                    结构生物信息学核心数据库导航
+                                </h1>
+                                <p className="text-sm text-slate-500 mt-1">
+                                    精选常用数据库与核心服务说明
+                                </p>
+                            </div>
+                            <div className="flex gap-3 mt-4">
+                                <input 
+                                    type="text" 
+                                    placeholder="搜索..." 
+                                    className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                                <select 
+                                    className="px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                                    value={selectedType}
+                                    onChange={(e) => setSelectedType(e.target.value)}
+                                >
+                                    {types.map(type => <option key={type}>{type}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <main className="max-w-5xl mx-auto px-6 py-8">
+                        <div className="space-y-4">
+                            {filteredData.map((item, idx) => (
+                                <div key={idx} className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition">
+                                    <div className="flex items-start justify-between gap-4 mb-3">
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${typeColors[item.type]}`}>
+                                                    {item.type}
+                                                </span>
+                                                <h2 className="text-xl font-bold text-slate-800">{item.name}</h2>
+                                            </div>
+                                            <p className="text-xs text-slate-500 mt-1">{item.fullName}</p>
+                                        </div>
+                                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700">
+                                            访问
+                                        </a>
+                                    </div>
+                                    <p className="text-sm text-slate-700 mb-3">{item.function}</p>
+                                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <p className="font-semibold text-slate-800 text-xs uppercase mb-2">数据类型</p>
+                                            <p className="text-slate-600">{item.dataType}</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-slate-800 text-xs uppercase mb-2">核心服务</p>
+                                            <ul className="text-slate-600 list-disc list-inside space-y-1">
+                                                {item.services.slice(0, 3).map((s, i) => <li key={i} className="text-xs">{s}</li>)}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        {filteredData.length === 0 && (
+                            <div className="text-center py-12">
+                                <p className="text-slate-500">未找到匹配的数据库</p>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
