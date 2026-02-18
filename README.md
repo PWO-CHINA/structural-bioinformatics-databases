@@ -14,7 +14,7 @@
 
 ### 📖 原文链接（选择对应地区）
 
-🌍 **国际版（海外访问）**：[https://link.oversea.cnki.net/doi/10.16511/j.cnki.qhdxxb.2025.21.056](https://link.oversea.cnki.net/doi/10.16511/j.cnki.qhdxxb.2025.21.056)
+🌍 **国际版（海外访问）**：[https://oversea.cnki.net/kcms2/article/abstract?v=adNygMj_jVBuz1-yFiJY953hxNQlRJzy-S-2-nQFAb9SWU-bVP7s2BAmEAmprwg02ITt9mrMbard62Ls1P6i_ICfNtFB4o4AlDkbmD7_L4f1bkZsEBUntzNMkncj0fpvLMcsDe936kOAckGP2c0gWB-fEZWVVpzVYHbCK8WmRb4=&uniplatform=OVERSEA](https://oversea.cnki.net/kcms2/article/abstract?v=adNygMj_jVBuz1-yFiJY953hxNQlRJzy-S-2-nQFAb9SWU-bVP7s2BAmEAmprwg02ITt9mrMbard62Ls1P6i_ICfNtFB4o4AlDkbmD7_L4f1bkZsEBUntzNMkncj0fpvLMcsDe936kOAckGP2c0gWB-fEZWVVpzVYHbCK8WmRb4=&uniplatform=OVERSEA)
 
 🇨🇳 **国内版（境内访问）**：[https://link.cnki.net/doi/10.16511/j.cnki.qhdxxb.2025.21.056](https://link.cnki.net/doi/10.16511/j.cnki.qhdxxb.2025.21.056)
 
