@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>结构生物信息学常用数据库（亮色版/可检索）</title>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --panel: #ffffff;
+    --panel-header: #f1f5f9;
+    --panel-inset: #f8fafc;
+    --text: #0f172a;
+    --text-sec: #64748b;
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --line: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --focus-ring: rgba(37, 99, 235, 0.2);
+    --r: 12px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--text);
+    background-color: var(--bg);
+    background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 24px; }
+  h1 { margin: 0; font-size: 22px; color: var(--text); font-weight: 700; letter-spacing: -0.02em; }
+  .sub { margin-top: 6px; color: var(--text-sec); font-size: 14px; line-height: 1.5; }
+  .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; background: var(--primary-light); color: var(--primary); font-weight: 600; font-size: 13px; margin-left: 10px; border: 1px solid rgba(37, 99, 235, 0.1); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+  input[type="search"], select, button { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 8px; padding: 10px 14px; outline: none; font-size: 14px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+  input[type="search"]:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+  input[type="search"] { flex: 1 1 380px; }
+  select { flex: 0 1 160px; cursor: pointer; }
+  button { cursor: pointer; font-weight: 500; background: #fff; }
+  button:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+  #export { background: var(--primary); color: white; border-color: var(--primary); }
+  #export:hover { background: #1d4ed8; border-color: #1d4ed8; color: white; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow-x: auto; overflow-y: hidden; margin-top: 20px; scrollbar-gutter: stable; }
+  table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+  th { background: var(--panel-header); color: var(--text-sec); text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--line); cursor: pointer; user-select: none; white-space: nowrap; }
+  th:hover { color: var(--primary); background: #e2e8f0; }
+  td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; color: #334155; line-height: 1.5; }
+  tbody tr { transition: background 0.15s; }
+  tbody tr:hover td { background: var(--primary-light); }
+  .pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; font-weight: 500; margin-right: 4px; margin-bottom: 4px; background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; }
+  td:first-child .pill { background: #f0f9ff; border-color: #bae6fd; color: #0369a1; font-weight: 600; }
+  .pill.blue { background: #eef2ff; border-color: #c7d2fe; color: #4338ca; }
+  .btn-sm { padding: 6px 12px; border-radius: 6px; font-size: 12px; }
+  .details-row td { background: #f8fafc !important; border-bottom: 1px solid var(--line); box-shadow: inset 0 2px 6px rgba(0,0,0,0.03); padding: 20px; }
+  .details { display: grid; gap: 16px; grid-template-columns: 1.2fr 1.2fr 1fr; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+  .card h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--text-sec); text-transform: uppercase; font-weight: 700; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; }
+  .mono { font-family: var(--mono); font-size: 12px; color: var(--primary); }
+  .muted { color: var(--text-sec); }
+  ul { margin: 0; padding-left: 18px; color: var(--text); }
+  li { margin: 6px 0; }
+  a { color: var(--primary); text-decoration: none; font-weight: 500; }
+  a:hover { text-decoration: underline; color: #1d4ed8; }
+  .si { display: inline-block; width: 12px; text-align: center; color: var(--primary); font-weight: bold; margin-left: 4px;}
+  .foot { margin-top: 20px; color: var(--text-sec); font-size: 13px; text-align: center; }
+  th:last-child, td:last-child { position: sticky; right: 0; z-index: 2; border-left: 1px solid var(--line); text-align: center; }
+  thead th:last-child { background: var(--panel-header); z-index: 3; box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05); }
+  tbody tr:not(.details-row) td:last-child { background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05); }
+  tbody tr:hover td:last-child { background: var(--primary-light); }
+  @media (max-width: 980px) { .details { grid-template-columns: 1fr; } .wrap { padding: 10px 12px; } input[type="search"] { flex: 1 1 100%; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;justify-content:space-between;">
+      <div>
+        <h1>结构生物信息学常用数据库 <span class="badge" id="count"></span></h1>
+        <div class="sub">基于文献整理：支持检索、多维筛选、排序与详情查看（护眼亮色版）</div>
+      </div>
+      <div class="sub mono" style="font-size:12px;color:var(--text-sec);">点击表头排序 | 点击"详情"查看完整信息</div>
+    </div>
+    <div class="row">
+      <input id="q" type="search" placeholder="输入关键词检索：PDB, 结构, 膜蛋白, 药物发现..." autocomplete="off" />
+      <select id="type"><option value="">所有类型</option></select>
+      <select id="tag">
+        <option value="">所有标签</option>
+        <option value="结构">结构</option>
+        <option value="分类">分类</option>
+        <option value="功能注释">功能注释</option>
+        <option value="相互作用">相互作用</option>
+        <option value="专题">专题</option>
+        <option value="预测">预测</option>
+        <option value="AI训练">AI训练</option>
+      </select>
+      <select id="action">
+        <option value="">批量操作</option>
+        <option value="reset">重置筛选</option>
+        <option value="collapse">全部收起</option>
+        <option value="expand">全部展开</option>
+      </select>
+      <button class="btn" id="export">导出JSON</button>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="wrap">
+    <div class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th data-key="db_type" style="width:100px;">类型<span class="si" id="si-db_type"></span></th>
+            <th data-key="name" style="width:140px;">名称<span class="si" id="si-name"></span></th>
+            <th data-key="main_data_type" style="width:260px;">主要数据类型<span class="si" id="si-main_data_type"></span></th>
+            <th data-key="function" style="width:220px;">功能定位<span class="si" id="si-function"></span></th>
+            <th data-key="use_case" style="width:220px;">应用场景<span class="si" id="si-use_case"></span></th>
+            <th data-key="maintainer" style="width:160px;">维护机构<span class="si" id="si-maintainer"></span></th>
+            <th style="width:80px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="foot">数据来源：结构生物信息学相关文献整理</div>
+  </div>
+</main>
+<script>
+const DATA = [{"db_type":"通用库","name":"PDB","full_name":"Protein Data Bank（wwPDB）","main_data_type":"蛋白质、核酸及复合物的三维坐标、实验参数文件、密度图等数据","function":"全球最大最权威的标准化三维结构数据库，AI训练的黄金数据","use_case":"基础研究、结构生物学、AI模型训练","established":"1971","maintainer":"wwPDB联盟","scale":"超过24万条结构条目","key_features":["mmCIF等标准化数据组织","归档关键实验原始数据","丰富的生物/化学注释"],"ai_relevance":["高质量实验结构→训练/评测结构预测与生成模型"],"access":"网页检索与下载；支持批量API","pdf_refs":"PDF§1.1","links":[{"label":"RCSB PDB","url":"https://www.rcsb.org"}],"tags":["结构","AI训练"]},{"db_type":"通用库","name":"EMDB","full_name":"Electron Microscopy Data Bank","main_data_type":"冷冻电镜三维电子密度图及元数据","function":"专注于冷冻电镜解析结果","use_case":"结构解析算法开发、冷冻电镜方法学开发","established":"2002","maintainer":"EMBL-EBI","scale":"超过3万条三维密度图条目","key_features":["以Cryo-EM三维密度图为核心","条目记录关键实验元数据"],"ai_relevance":["为密度图解释、建模与重建算法提供基准数据"],"access":"网页检索与下载","links":[{"label":"EMDB@EBI","url":"https://www.ebi.ac.uk/emdb/"}],"tags":["结构"]},{"db_type":"通用库","name":"EMPIAR","full_name":"Electron Microscopy Public Image Archive","main_data_type":"原始二维显微图像及关键中间处理文件","function":"EMDB 的补充资源，原始数据归档","use_case":"冷冻电镜结构解析相关算法开发","established":"2010","maintainer":"EMBL-EBI","scale":"超过1500个数据集","key_features":["存储原始2D显微照片","支持结果可追溯与可重复性验证"],"ai_relevance":["训练/评测颗粒挑选、去噪等模型"],"access":"网页检索与批量下载","links":[{"label":"EMPIAR@EBI","url":"https://www.ebi.ac.uk/empiar/"}],"tags":["结构"]},{"db_type":"分类库","name":"SCOP","full_name":"Structural Classification of Proteins","main_data_type":"蛋白家族、结构域等分类数据","function":"蛋白质结构域分类权威数据库","use_case":"结构与进化关系研究、辅助结构预测","established":"1994","maintainer":"专家手工审核","scale":"四层：类别/折叠/超家族/家族","key_features":["结构分类'黄金标准'","SCOP 2.0引入自动化辅助"],"ai_relevance":["提供折叠/结构域/同源关系先验"],"access":"网页浏览与下载","links":[{"label":"SCOPe","url":"https://scop.berkeley.edu/"}],"tags":["分类"]},{"db_type":"分类库","name":"CATH","full_name":"Class/Architecture/Topology/Homologous superfamily","main_data_type":"结构分类、结构域边界注释","function":"蛋白质三维结构分层分类权威资源","use_case":"结构预测辅助、结构域/拓扑分析","established":"2005","maintainer":"半自动化分类流程","scale":"四层：Class / Architecture / Topology / Homologous superfamily","key_features":["半自动化分层分类","强调结构域边界与拓扑层级"],"ai_relevance":["提供结构域边界与拓扑标签"],"access":"网页检索与下载","links":[{"label":"CATH","url":"https://www.cathdb.info/"}],"tags":["分类"]},{"db_type":"注释库","name":"Pfam","full_name":"Protein Families Database","main_data_type":"多序列比对与HMM注释数据","function":"标注蛋白质家族、结构域与功能模块","use_case":"结构域注释与功能预测、演化研究","established":"1997","maintainer":"UniProt联盟维护","scale":"超过19000个家族","key_features":["基于MSA构建HMM profile","快速精准识别结构域边界"],"ai_relevance":["为结构预测提供功能模块约束"],"access":"网页检索与批量下载","links":[{"label":"Pfam@Xfam","url":"https://pfam.xfam.org/"}],"tags":["功能注释"]},{"db_type":"注释库","name":"InterPro","full_name":"Integrative Protein Signature Database","main_data_type":"整合的功能标签签名","function":"功能注释的'元数据库'","use_case":"结构-功能关联分析、自动化大规模注释","established":"2002","maintainer":"InterPro项目组","key_features":["整合多个成员库签名并统一、去冗余","形成一站式更可靠注释"],"ai_relevance":["为结构/功能预测模型提供更一致的标签体系"],"access":"网页检索与批量工具","links":[{"label":"InterPro","url":"https://www.ebi.ac.uk/interpro/"}],"tags":["功能注释"]},{"db_type":"综合库","name":"UniProt","full_name":"Universal Protein Resource","main_data_type":"序列为中心：结构、功能域、物种信息","function":"蛋白质最核心的综合性知识库","use_case":"几乎所有蛋白研究的信息枢纽","established":"2003","maintainer":"UniProt联盟","key_features":["以序列为中心提供唯一身份标识","整合PDB结构、Pfam结构域等"],"ai_relevance":["结构预测与功能预测AI模型的重要序列与标签来源"],"access":"网页、API与批量下载","links":[{"label":"UniProt","url":"https://www.uniprot.org/"}],"tags":["综合"]},{"db_type":"预测库","name":"AlphaFoldDB","full_name":"AlphaFold Protein Structure Database","main_data_type":"AlphaFold预测的蛋白三维结构","function":"全蛋白质组级预测结构数据库","use_case":"蛋白分类与注释、结构预测模型训练","established":"2021","maintainer":"DeepMind × EMBL-EBI","scale":"覆盖人类及数十个物种、数千万条预测结构","key_features":["规模化覆盖，大幅扩展结构空间","逐残基置信度（pLDDT）帮助识别可靠区域"],"ai_relevance":["形成'AI预测→数据库化存储→反哺AI研究'的闭环","为下游功能注释与药物发现提供结构覆盖"],"access":"网页检索与批量下载","links":[{"label":"AlphaFold DB","url":"https://alphafold.ebi.ac.uk/"}],"tags":["预测","AI训练"]}];
+
+let sortKey = 'db_type';
+let sortDir = 'asc';
+
+function norm(x) { return (x ?? '').toString().toLowerCase(); }
+function esc(s) { return (s ?? '').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;"); }
+
+const qEl = document.getElementById('q');
+const typeEl = document.getElementById('type');
+const tagEl = document.getElementById('tag');
+const actionEl = document.getElementById('action');
+const tbody = document.getElementById('tbody');
+const countEl = document.getElementById('count');
+const exportBtn = document.getElementById('export');
+
+function render() {
+  const q = norm(qEl.value).trim();
+  const t = typeEl.value;
+  const tag = tagEl.value;
+  let filtered = DATA.filter(item => {
+    if (t && item.db_type !== t) return false;
+    if (tag && (!item.tags || !item.tags.includes(tag))) return false;
+    if (!q) return true;
+    const hay = [item.db_type, item.name, item.main_data_type, item.function].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  
+  tbody.innerHTML = '';
+  countEl.textContent = `${filtered.length} / ${DATA.length}`;
+  filtered.forEach((item) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><span class="pill">${esc(item.db_type)}</span></td><td><div style="font-weight:700;">${esc(item.name)}</div><div class="muted" style="font-size:12px;">${esc(item.full_name)}</div></td><td>${esc(item.main_data_type)}</td><td>${esc(item.function)}</td><td>${esc(item.use_case)}</td><td>${esc(item.maintainer || '—')}</td><td><button class="btn-sm" data-act="toggle">详情</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+[...new Set(DATA.map(d => d.db_type))].forEach(t => {
+  const o = document.createElement('option');
+  o.value = t; o.textContent = t;
+  typeEl.appendChild(o);
+});
+[qEl, typeEl, tagEl, actionEl].forEach(el => el.addEventListener('change', render));
+qEl.addEventListener('input', render);
+
+render();
+</script>
+</body>
+</html>
