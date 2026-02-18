@@ -35,24 +35,32 @@
 
 ## 🚀 快速开始
 
-直接在浏览器中打开以下 HTML 文件：
+### 在线访问（GitHub Pages）
+直接点击以下链接即可在浏览器中打开：
+
+- 🔍 [数据库检索系统](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-searchable.html)
+- 📚 [数据库导航平台](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-navigator.html)  
+- ⏳ [数据库演进时间线](https://PWO-CHINA.github.io/structural-bioinformatics-databases/databases-timeline.html)
+
+### 本地开发
+
+克隆仓库后在本地运行：
 
 ```bash
-# 本地开发
-python -m http.server 8000  # Python 3
-# 或
-http-server                  # Node.js
+git clone https://github.com/PWO-CHINA/structural-bioinformatics-databases.git
+cd structural-bioinformatics-databases
+
+# Python 方式
+python -m http.server 8000
+
+# 或 Node.js 方式
+npx http-server
 
 # 访问地址
-- http://localhost:8000/databases-searchable.html
-- http://localhost:8000/databases-navigator.html
-- http://localhost:8000/databases-timeline.html
+# http://localhost:8000/databases-searchable.html
+# http://localhost:8000/databases-navigator.html
+# http://localhost:8000/databases-timeline.html
 ```
-
-### 在线访问
-- [检索系统](https://github.com/PWO-CHINA/structural-bioinformatics-databases/blob/main/databases-searchable.html)
-- [导航平台](https://github.com/PWO-CHINA/structural-bioinformatics-databases/blob/main/databases-navigator.html)
-- [演进时间线](https://github.com/PWO-CHINA/structural-bioinformatics-databases/blob/main/databases-timeline.html)
 
 ## 📊 数据库覆盖范围
 
@@ -121,6 +129,7 @@ http-server                  # Node.js
 - **可视化**：原生 HTML + JavaScript
 - **图标库**：Phosphor Icons
 - **字体**：Inter, Noto Serif SC
+- **部署**：GitHub Pages
 
 ## 📖 进一步资源
 
