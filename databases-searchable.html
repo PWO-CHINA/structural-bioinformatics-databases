@@ -6,80 +6,248 @@
 <title>结构生物信息学常用数据库（亮色版/可检索）</title>
 <style>
   :root {
-    --bg: #f8fafc;
-    --panel: #ffffff;
-    --panel-header: #f1f5f9;
-    --panel-inset: #f8fafc;
-    --text: #0f172a;
-    --text-sec: #64748b;
-    --primary: #2563eb;
-    --primary-light: #eff6ff;
-    --line: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    /* 核心色板：亮色系 */
+    --bg: #f8fafc;           /* 整体背景：极淡灰蓝 */
+    --panel: #ffffff;        /* 主要面板：纯白 */
+    --panel-header: #f1f5f9; /* 表头背景：淡灰 */
+    --panel-inset: #f8fafc;  /* 详情内嵌背景 */
+    
+    --text: #0f172a;         /* 主文字：深蓝黑 */
+    --text-sec: #64748b;     /* 次要文字：中灰 */
+    --primary: #2563eb;      /* 主题色：科学蓝 */
+    --primary-light: #eff6ff;/* 主题色淡背景 */
+    
+    --line: #e2e8f0;         /* 分割线：浅灰 */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); /* 柔和投影 */
     --focus-ring: rgba(37, 99, 235, 0.2);
-    --r: 12px;
+    
+    --r: 12px; /* 圆角半径 */
+    
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   }
+
   * { box-sizing: border-box; }
+  
   body {
     margin: 0;
     font-family: var(--sans);
     color: var(--text);
     background-color: var(--bg);
-    background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    /* 顶部细微渐变，模拟光照，不再是暗夜极光 */
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
     background-attachment: fixed;
   }
+
+  /* 顶部导航栏 */
   header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.85); /* 毛玻璃效果 */
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
     box-shadow: 0 1px 2px rgba(0,0,0,0.02);
   }
+
   .wrap { max-width: 1240px; margin: 0 auto; padding: 20px 24px; }
+  
   h1 { margin: 0; font-size: 22px; color: var(--text); font-weight: 700; letter-spacing: -0.02em; }
   .sub { margin-top: 6px; color: var(--text-sec); font-size: 14px; line-height: 1.5; }
-  .badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; background: var(--primary-light); color: var(--primary); font-weight: 600; font-size: 13px; margin-left: 10px; border: 1px solid rgba(37, 99, 235, 0.1); }
+  
+  /* 计数徽章 */
+  .badge {
+    display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px;
+    background: var(--primary-light); color: var(--primary);
+    font-weight: 600; font-size: 13px; margin-left: 10px;
+    border: 1px solid rgba(37, 99, 235, 0.1);
+  }
+
+  /* 搜索与筛选区域 */
   .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
-  input[type="search"], select, button { border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 8px; padding: 10px 14px; outline: none; font-size: 14px; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
-  input[type="search"]:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+
+  input[type="search"], select, button {
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--text);
+    border-radius: 8px; /* 稍微方一点，更现代 */
+    padding: 10px 14px;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+
+  input[type="search"]:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+
   input[type="search"] { flex: 1 1 380px; }
   select { flex: 0 1 160px; cursor: pointer; }
-  button { cursor: pointer; font-weight: 500; background: #fff; }
-  button:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
-  #export { background: var(--primary); color: white; border-color: var(--primary); }
-  #export:hover { background: #1d4ed8; border-color: #1d4ed8; color: white; }
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow-x: auto; overflow-y: hidden; margin-top: 20px; scrollbar-gutter: stable; }
+  
+  button { 
+    cursor: pointer; font-weight: 500; 
+    background: #fff;
+  }
+  button:hover { 
+    background: var(--primary-light); 
+    border-color: var(--primary); 
+    color: var(--primary);
+  }
+  
+  /* 导出按钮特殊样式 */
+  #export {
+    background: var(--primary); color: white; border-color: var(--primary);
+  }
+  #export:hover {
+    background: #1d4ed8; border-color: #1d4ed8; /* Darker Blue */
+    color: white;
+  }
+
+  /* 表格容器 */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: 20px;
+    scrollbar-gutter: stable;
+  }
+
   table { width: 100%; border-collapse: collapse; min-width: 1100px; }
-  th { background: var(--panel-header); color: var(--text-sec); text-transform: uppercase; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--line); cursor: pointer; user-select: none; white-space: nowrap; }
+  
+  /* 表头 */
+  th {
+    background: var(--panel-header);
+    color: var(--text-sec);
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
   th:hover { color: var(--primary); background: #e2e8f0; }
-  td { padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 14px; color: #334155; line-height: 1.5; }
+
+  td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 14px;
+    color: #334155; /* Slate 700 */
+    line-height: 1.5;
+  }
+
+  /* 斑马纹与悬停 */
   tbody tr { transition: background 0.15s; }
   tbody tr:hover td { background: var(--primary-light); }
-  .pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; font-weight: 500; margin-right: 4px; margin-bottom: 4px; background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; }
-  td:first-child .pill { background: #f0f9ff; border-color: #bae6fd; color: #0369a1; font-weight: 600; }
-  .pill.blue { background: #eef2ff; border-color: #c7d2fe; color: #4338ca; }
-  .btn-sm { padding: 6px 12px; border-radius: 6px; font-size: 12px; }
-  .details-row td { background: #f8fafc !important; border-bottom: 1px solid var(--line); box-shadow: inset 0 2px 6px rgba(0,0,0,0.03); padding: 20px; }
-  .details { display: grid; gap: 16px; grid-template-columns: 1.2fr 1.2fr 1fr; }
-  .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
-  .card h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--text-sec); text-transform: uppercase; font-weight: 700; border-bottom: 1px solid #f1f5f9; padding-bottom: 6px; }
+  
+  /* 标签 Pill 样式 - 亮色版核心改动：淡背景深色字 */
+  .pill {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 12px; white-space: nowrap; font-weight: 500;
+    margin-right: 4px; margin-bottom: 4px;
+    background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; /* 默认灰 */
+  }
+  
+  /* 类型列的 Pill */
+  td:first-child .pill {
+    background: #f0f9ff; border-color: #bae6fd; color: #0369a1; /* Sky Blue */
+    font-weight: 600;
+  }
+  
+  /* 蓝色标签 (Tags) */
+  .pill.blue {
+    background: #eef2ff; border-color: #c7d2fe; color: #4338ca; /* Indigo */
+  }
+
+  /* 按钮微调 */
+  .btn-sm {
+    padding: 6px 12px; border-radius: 6px; font-size: 12px;
+  }
+
+  /* 详情区域 */
+  .details-row td {
+    background: #f8fafc !important; /* 区别于白色的灰色底 */
+    border-bottom: 1px solid var(--line);
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.03); /* 内部阴影 */
+    padding: 20px;
+  }
+  
+  .details {
+    display: grid; gap: 16px; grid-template-columns: 1.2fr 1.2fr 1fr;
+  }
+
+  /* 详情卡片 */
+  .card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+  
+  .card h3 {
+    margin: 0 0 10px 0; font-size: 13px; color: var(--text-sec);
+    text-transform: uppercase; font-weight: 700; border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 6px;
+  }
+
   .mono { font-family: var(--mono); font-size: 12px; color: var(--primary); }
   .muted { color: var(--text-sec); }
+  
   ul { margin: 0; padding-left: 18px; color: var(--text); }
   li { margin: 6px 0; }
+  
   a { color: var(--primary); text-decoration: none; font-weight: 500; }
   a:hover { text-decoration: underline; color: #1d4ed8; }
+
+  /* 排序箭头 */
   .si { display: inline-block; width: 12px; text-align: center; color: var(--primary); font-weight: bold; margin-left: 4px;}
+
+  /* 底部 */
   .foot { margin-top: 20px; color: var(--text-sec); font-size: 13px; text-align: center; }
-  th:last-child, td:last-child { position: sticky; right: 0; z-index: 2; border-left: 1px solid var(--line); text-align: center; }
-  thead th:last-child { background: var(--panel-header); z-index: 3; box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05); }
-  tbody tr:not(.details-row) td:last-child { background: rgba(255,255,255,0.95); backdrop-filter: blur(4px); box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05); }
-  tbody tr:hover td:last-child { background: var(--primary-light); }
-  @media (max-width: 980px) { .details { grid-template-columns: 1fr; } .wrap { padding: 10px 12px; } input[type="search"] { flex: 1 1 100%; } }
+
+  /* 冻结列处理 - 亮色版适配 */
+  th:last-child, td:last-child { 
+    position: sticky; right: 0; z-index: 2; 
+    border-left: 1px solid var(--line); /* 添加左边框以分隔 */
+    text-align: center;
+  }
+  
+  thead th:last-child {
+    background: var(--panel-header); /* 与表头一致 */
+    z-index: 3;
+    box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05); /* 左侧阴影 */
+  }
+  
+  tbody tr:not(.details-row) td:last-child {
+    background: rgba(255,255,255,0.95); /* 半透明白 */
+    backdrop-filter: blur(4px);
+    box-shadow: -4px 0 8px -4px rgba(0,0,0,0.05);
+  }
+
+  /* 悬停时，冻结列背景也要变色，否则会有白色方块遮挡 */
+  tbody tr:hover td:last-child {
+    background: var(--primary-light);
+  }
+
+  /* 响应式 */
+  @media (max-width: 980px) {
+    .details { grid-template-columns: 1fr; }
+    .wrap { padding: 10px 12px; }
+    input[type="search"] { flex: 1 1 100%; }
+  }
 </style>
 </head>
 <body>
@@ -88,10 +256,12 @@
     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;justify-content:space-between;">
       <div>
         <h1>结构生物信息学常用数据库 <span class="badge" id="count"></span></h1>
-        <div class="sub">基于文献整理：支持检索、多维筛选、排序与详情查看（护眼亮色版）</div>
+        <div class="sub">基于PDF数据整理：支持检索、多维筛选、排序与详情查看（亮色护眼版）。</div>
       </div>
-      <div class="sub mono" style="font-size:12px;color:var(--text-sec);">点击表头排序 | 点击"详情"查看完整信息</div>
+      <!-- 隐藏的小提示 -->
+      <div class="sub mono" style="font-size:12px;color:var(--text-sec);">点击表头排序 | 点击“详情”查看完整信息</div>
     </div>
+
     <div class="row">
       <input id="q" type="search" placeholder="输入关键词检索：PDB, 结构, 膜蛋白, 药物发现..." autocomplete="off" />
       <select id="type"><option value="">所有类型</option></select>
@@ -104,6 +274,11 @@
         <option value="专题">专题</option>
         <option value="预测">预测</option>
         <option value="AI训练">AI训练</option>
+        <option value="Cryo-EM">Cryo-EM</option>
+        <option value="膜蛋白">膜蛋白</option>
+        <option value="核酸">核酸</option>
+        <option value="无序蛋白">无序蛋白</option>
+        <option value="药物发现">药物发现</option>
       </select>
       <select id="action">
         <option value="">批量操作</option>
@@ -115,6 +290,7 @@
     </div>
   </div>
 </header>
+
 <main>
   <div class="wrap">
     <div class="panel">
@@ -133,17 +309,494 @@
         <tbody id="tbody"></tbody>
       </table>
     </div>
-    <div class="foot">数据来源：结构生物信息学相关文献整理</div>
+
+    <div class="foot">
+      数据来源：结构生物信息学相关文献整理。包含建立时间、规模、特征、AI相关性及访问入口。
+    </div>
   </div>
 </main>
+
 <script>
-const DATA = [{"db_type":"通用库","name":"PDB","full_name":"Protein Data Bank（wwPDB）","main_data_type":"蛋白质、核酸及复合物的三维坐标、实验参数文件、密度图等数据","function":"全球最大最权威的标准化三维结构数据库，AI训练的黄金数据","use_case":"基础研究、结构生物学、AI模型训练","established":"1971","maintainer":"wwPDB联盟","scale":"超过24万条结构条目","key_features":["mmCIF等标准化数据组织","归档关键实验原始数据","丰富的生物/化学注释"],"ai_relevance":["高质量实验结构→训练/评测结构预测与生成模型"],"access":"网页检索与下载；支持批量API","pdf_refs":"PDF§1.1","links":[{"label":"RCSB PDB","url":"https://www.rcsb.org"}],"tags":["结构","AI训练"]},{"db_type":"通用库","name":"EMDB","full_name":"Electron Microscopy Data Bank","main_data_type":"冷冻电镜三维电子密度图及元数据","function":"专注于冷冻电镜解析结果","use_case":"结构解析算法开发、冷冻电镜方法学开发","established":"2002","maintainer":"EMBL-EBI","scale":"超过3万条三维密度图条目","key_features":["以Cryo-EM三维密度图为核心","条目记录关键实验元数据"],"ai_relevance":["为密度图解释、建模与重建算法提供基准数据"],"access":"网页检索与下载","links":[{"label":"EMDB@EBI","url":"https://www.ebi.ac.uk/emdb/"}],"tags":["结构"]},{"db_type":"通用库","name":"EMPIAR","full_name":"Electron Microscopy Public Image Archive","main_data_type":"原始二维显微图像及关键中间处理文件","function":"EMDB 的补充资源，原始数据归档","use_case":"冷冻电镜结构解析相关算法开发","established":"2010","maintainer":"EMBL-EBI","scale":"超过1500个数据集","key_features":["存储原始2D显微照片","支持结果可追溯与可重复性验证"],"ai_relevance":["训练/评测颗粒挑选、去噪等模型"],"access":"网页检索与批量下载","links":[{"label":"EMPIAR@EBI","url":"https://www.ebi.ac.uk/empiar/"}],"tags":["结构"]},{"db_type":"分类库","name":"SCOP","full_name":"Structural Classification of Proteins","main_data_type":"蛋白家族、结构域等分类数据","function":"蛋白质结构域分类权威数据库","use_case":"结构与进化关系研究、辅助结构预测","established":"1994","maintainer":"专家手工审核","scale":"四层：类别/折叠/超家族/家族","key_features":["结构分类'黄金标准'","SCOP 2.0引入自动化辅助"],"ai_relevance":["提供折叠/结构域/同源关系先验"],"access":"网页浏览与下载","links":[{"label":"SCOPe","url":"https://scop.berkeley.edu/"}],"tags":["分类"]},{"db_type":"分类库","name":"CATH","full_name":"Class/Architecture/Topology/Homologous superfamily","main_data_type":"结构分类、结构域边界注释","function":"蛋白质三维结构分层分类权威资源","use_case":"结构预测辅助、结构域/拓扑分析","established":"2005","maintainer":"半自动化分类流程","scale":"四层：Class / Architecture / Topology / Homologous superfamily","key_features":["半自动化分层分类","强调结构域边界与拓扑层级"],"ai_relevance":["提供结构域边界与拓扑标签"],"access":"网页检索与下载","links":[{"label":"CATH","url":"https://www.cathdb.info/"}],"tags":["分类"]},{"db_type":"注释库","name":"Pfam","full_name":"Protein Families Database","main_data_type":"多序列比对与HMM注释数据","function":"标注蛋白质家族、结构域与功能模块","use_case":"结构域注释与功能预测、演化研究","established":"1997","maintainer":"UniProt联盟维护","scale":"超过19000个家族","key_features":["基于MSA构建HMM profile","快速精准识别结构域边界"],"ai_relevance":["为结构预测提供功能模块约束"],"access":"网页检索与批量下载","links":[{"label":"Pfam@Xfam","url":"https://pfam.xfam.org/"}],"tags":["功能注释"]},{"db_type":"注释库","name":"InterPro","full_name":"Integrative Protein Signature Database","main_data_type":"整合的功能标签签名","function":"功能注释的'元数据库'","use_case":"结构-功能关联分析、自动化大规模注释","established":"2002","maintainer":"InterPro项目组","key_features":["整合多个成员库签名并统一、去冗余","形成一站式更可靠注释"],"ai_relevance":["为结构/功能预测模型提供更一致的标签体系"],"access":"网页检索与批量工具","links":[{"label":"InterPro","url":"https://www.ebi.ac.uk/interpro/"}],"tags":["功能注释"]},{"db_type":"综合库","name":"UniProt","full_name":"Universal Protein Resource","main_data_type":"序列为中心：结构、功能域、物种信息","function":"蛋白质最核心的综合性知识库","use_case":"几乎所有蛋白研究的信息枢纽","established":"2003","maintainer":"UniProt联盟","key_features":["以序列为中心提供唯一身份标识","整合PDB结构、Pfam结构域等"],"ai_relevance":["结构预测与功能预测AI模型的重要序列与标签来源"],"access":"网页、API与批量下载","links":[{"label":"UniProt","url":"https://www.uniprot.org/"}],"tags":["综合"]},{"db_type":"预测库","name":"AlphaFoldDB","full_name":"AlphaFold Protein Structure Database","main_data_type":"AlphaFold预测的蛋白三维结构","function":"全蛋白质组级预测结构数据库","use_case":"蛋白分类与注释、结构预测模型训练","established":"2021","maintainer":"DeepMind × EMBL-EBI","scale":"覆盖人类及数十个物种、数千万条预测结构","key_features":["规模化覆盖，大幅扩展结构空间","逐残基置信度（pLDDT）帮助识别可靠区域"],"ai_relevance":["形成'AI预测→数据库化存储→反哺AI研究'的闭环","为下游功能注释与药物发现提供结构覆盖"],"access":"网页检索与批量下载","links":[{"label":"AlphaFold DB","url":"https://alphafold.ebi.ac.uk/"}],"tags":["预测","AI训练"]}];
+// 数据源保持不变
+const DATA = [
+  {
+    "db_type":"通用库","name":"PDB","full_name":"Protein Data Bank（wwPDB）",
+    "main_data_type":"蛋白质、核酸及复合物的三维坐标、实验参数文件、密度图等数据",
+    "function":"全球最大最权威的标准化三维结构数据库，AI训练的黄金数据",
+    "use_case":"基础研究、结构生物学、AI模型训练",
+    "established":"1971（最初仅7条X射线蛋白结构记录）",
+    "maintainer":"wwPDB联盟（协调RCSB PDB、PDBe、PDBj、PDBc的数据接收/验证/注释/发布）",
+    "scale":"截至2025年9月：收录超过24万条结构条目；约85%来自X射线晶体学；冷冻电镜条目增长速度已超过X射线。",
+    "key_features":[
+      "mmCIF等标准化、可扩展数据组织；记录每个原子的x/y/z坐标",
+      "归档关键实验原始数据：结构因子文件、Cryo-EM三维密度图等",
+      "丰富的生物/化学注释并链接原始论文形成可追溯链条",
+      "提供关键词/高级检索、序列搜索（BLAST）、在线三维可视化（Mol*）、结构比对与API访问"
+    ],
+    "ai_relevance":[
+      "高质量实验结构→训练/评测结构预测与生成模型",
+      "结构-配体/复合物信息→相互作用建模、药物发现等下游任务"
+    ],
+    "relationships":[
+      "与EMDB互补：当密度图可构建原子模型时，坐标入PDB并在条目间互链"
+    ],
+    "access":"网页检索与下载；支持批量API；常见文件：mmCIF/坐标文件、结构因子、密度图等",
+    "pdf_refs":"PDF§1.1与相关段落（mmCIF/BLAST/Mol*/API等）",
+    "links":[
+      {"label":"RCSB PDB","url":"https://www.rcsb.org"},
+      {"label":"PDBe","url":"https://www.ebi.ac.uk/pdbe/"},
+      {"label":"PDBj","url":"https://pdbj.org/"},
+      {"label":"PDBc","url":"https://pdbc.org/"}
+    ],
+    "tags":["结构","通用","实验","AI训练"]
+  },
+  {
+    "db_type":"通用库","name":"EMDB","full_name":"Electron Microscopy Data Bank",
+    "main_data_type":"冷冻电镜三维电子密度图及元数据",
+    "function":"专注于冷冻电镜解析结果，补充PDB",
+    "use_case":"结构解析算法开发、冷冻电镜方法学开发",
+    "established":"2002",
+    "maintainer":"EMBL-EBI（欧洲生物信息学研究所）",
+    "scale":"截至2025年初：公开发布超过3万条三维密度图（3D map）条目。",
+    "key_features":[
+      "以Cryo-EM三维密度图为核心数据实体",
+      "条目记录关键实验元数据：分辨率、对称性、重建方法等",
+      "当密度图可构建原子模型时，与PDB条目互链"
+    ],
+    "ai_relevance":[
+      "为密度图解释、建模与重建算法提供基准数据与元数据标签"
+    ],
+    "relationships":[
+      "与PDB互链：同一结构可同时有EMDB密度图与PDB坐标模型"
+    ],
+    "access":"网页检索与下载；常见文件：MRC/MAP等密度图格式与元数据",
+    "pdf_refs":"PDF§1.3.1（EMDB/EMPIAR段落）",
+    "links":[{"label":"EMDB@EBI","url":"https://www.ebi.ac.uk/emdb/"}],
+    "tags":["结构","通用","Cryo-EM"]
+  },
+  {
+    "db_type":"通用库","name":"EMPIAR","full_name":"Electron Microscopy Public Image Archive",
+    "main_data_type":"原始二维显微图像及关键中间处理文件",
+    "function":"作为EMDB的补充资源",
+    "use_case":"冷冻电镜结构解析相关算法开发",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"EMBL-EBI",
+    "scale":"截至2025年9月：归档超过1500个数据集；总数据量达PB级。",
+    "key_features":[
+      "存储原始2D显微照片与关键中间处理文件（如颗粒栈等）",
+      "支持结果可追溯与可重复性验证",
+      "为AI驱动的Cryo-EM算法提供高质量大规模训练数据"
+    ],
+    "ai_relevance":[
+      "训练/评测颗粒挑选、去噪、CTF估计、3D重建等模型与流程"
+    ],
+    "relationships":[
+      "作为EMDB的“原始数据层”补充，提升全流程可追溯性"
+    ],
+    "access":"网页检索与批量下载；数据格式多样（显微原始数据/图像栈/处理产物）",
+    "pdf_refs":"PDF§1.3.1（EMPIAR段落）",
+    "links":[{"label":"EMPIAR@EBI","url":"https://www.ebi.ac.uk/empiar/"}],
+    "tags":["结构","通用","Cryo-EM","原始数据","AI训练"]
+  },
 
-let sortKey = 'db_type';
-let sortDir = 'asc';
+  {
+    "db_type":"分类库","name":"SCOP","full_name":"SCOP / SCOP2.0（结构分类）",
+    "main_data_type":"蛋白家族、结构域等分类数据",
+    "function":"蛋白质结构域分类权威数据库",
+    "use_case":"结构与进化关系研究、辅助结构预测",
+    "established":"1994",
+    "maintainer":"专家手工审核为核心；SCOP 2.0引入自动化辅助+专家审核更新",
+    "scale":"四层：类别/折叠/超家族/家族。",
+    "key_features":[
+      "结构分类“黄金标准”",
+      "SCOP 2.0：DALI、TM-align等算法初筛 + 专家审核，适应高通量数据增长"
+    ],
+    "ai_relevance":[
+      "提供折叠/结构域/同源关系先验，约束预测空间并提升可解释性"
+    ],
+    "relationships":[
+      "与CATH互补，提供不同视角的分层分类框架"
+    ],
+    "access":"网页浏览与下载；常用于结构域分割、折叠/超家族分析",
+    "pdf_refs":"PDF§1.2.1（SCOP/CATH段落）",
+    "links":[{"label":"SCOPe","url":"https://scop.berkeley.edu/"}],
+    "tags":["分类","结构域","进化"]
+  },
+  {
+    "db_type":"分类库","name":"CATH","full_name":"CATH（Class/Architecture/Topology/Homologous superfamily）",
+    "main_data_type":"结构分类、结构域边界注释、功能、进化等数据",
+    "function":"蛋白质三维结构分层分类权威资源",
+    "use_case":"结构预测辅助、结构域/拓扑分析",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"半自动化分类流程",
+    "scale":"四层：Class / Architecture / Topology / Homologous superfamily。",
+    "key_features":[
+      "半自动化分层分类；强调结构域边界与拓扑层级",
+      "为结构预测提供拓扑先验，缩小搜索空间"
+    ],
+    "ai_relevance":[
+      "提供结构域边界与拓扑标签，用于训练/评测结构分类模型"
+    ],
+    "relationships":[
+      "与SCOP互补"
+    ],
+    "access":"网页检索与下载",
+    "pdf_refs":"PDF§1.2.1（SCOP/CATH段落）",
+    "links":[{"label":"CATH","url":"https://www.cathdb.info/"}],
+    "tags":["分类","结构域","拓扑"]
+  },
 
-function norm(x) { return (x ?? '').toString().toLowerCase(); }
-function esc(s) { return (s ?? '').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;"); }
+  {
+    "db_type":"注释库","name":"Pfam","full_name":"Pfam（蛋白家族/结构域）",
+    "main_data_type":"多序列比对与HMM（隐马尔可夫模型）注释数据",
+    "function":"标注蛋白质家族、结构域与功能模块",
+    "use_case":"结构域注释与功能预测、演化研究",
+    "established":"1997（由EBI创建）",
+    "maintainer":"现由UniProt联盟维护",
+    "scale":"截至2024年：35.0版本定义>19000个家族/功能域。",
+    "key_features":[
+      "基于MSA构建HMM profile，快速精准识别结构域边界",
+      "常作为大规模功能注释的核心资源"
+    ],
+    "ai_relevance":[
+      "为结构预测提供功能模块约束；为功能预测提供高质量标签"
+    ],
+    "relationships":[
+      "InterPro整合Pfam与其它成员库签名并去冗余"
+    ],
+    "access":"网页检索与批量下载",
+    "pdf_refs":"PDF§1.2.2（Pfam/SMART/CSA段落）",
+    "links":[{"label":"Pfam@Xfam","url":"https://pfam.xfam.org/"}],
+    "tags":["功能注释","结构域","AI训练"]
+  },
+  {
+    "db_type":"注释库","name":"SMART","full_name":"SMART（结构域/功能位点）",
+    "main_data_type":"蛋白结构域与功能位点数据",
+    "function":"偏重信号传导、核内及胞外蛋白中可移动功能域识别",
+    "use_case":"未知序列功能推断、结构解释",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"SMART项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "HMM驱动；与Pfam互补",
+      "聚焦信号传导/核内/胞外等功能域谱系"
+    ],
+    "ai_relevance":[
+      "为结构预测与功能解释提供结构域/位点先验"
+    ],
+    "relationships":[
+      "常与Pfam联合使用；InterPro整合多成员库"
+    ],
+    "access":"网页检索与域注释输出",
+    "pdf_refs":"PDF§1.2.2（SMART段落）",
+    "links":[{"label":"SMART","url":"https://smart.embl.de/"}],
+    "tags":["功能注释","结构域"]
+  },
+  {
+    "db_type":"注释库","name":"CSA","full_name":"Catalytic Site Atlas（催化位点图谱）",
+    "main_data_type":"文献挖掘与同源推断的酶催化残基/活性中心注释",
+    "function":"标注酶活性中心特征（残基级功能注释）",
+    "use_case":"酶工程、机理推断与位点设计",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"CSA项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "文献证据 + 同源推断，精确标注催化残基",
+      "提供细粒度功能约束，帮助生成“有活性”的正确构象"
+    ],
+    "ai_relevance":[
+      "为功能位点预测/结构生成/酶机理学习提供关键监督信号"
+    ],
+    "relationships":[
+      "InterPro整合CSA等成员库"
+    ],
+    "access":"网页查询与下载",
+    "pdf_refs":"PDF§1.2.2（CSA段落）",
+    "links":[{"label":"CSA","url":"https://www.ebi.ac.uk/thornton-srv/databases/CSA/"}],
+    "tags":["功能注释","位点","AI训练"]
+  },
+  {
+    "db_type":"注释库","name":"PDBbind","full_name":"PDBbind（结构-亲和力）",
+    "main_data_type":"蛋白-小分子复合物结构 + 结合亲和力（Kd/Ki/IC50等）",
+    "function":"分子相互作用领域关键数据库",
+    "use_case":"结构基础药物设计、亲和力预测模型训练",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"PDBbind项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "连接三维复合物与实验亲和力，构成训练/评测基准数据",
+      "广泛用于对接评分、亲和力预测与分子生成任务"
+    ],
+    "ai_relevance":[
+      "亲和力预测、打分函数、结构引导生成等模型的核心数据集"
+    ],
+    "relationships":[
+      "结构来自PDB，增加亲和力实验读数维度"
+    ],
+    "access":"数据集下载（入口以官网为主）",
+    "pdf_refs":"PDF§1.2.2（PDBbind/STRING段落）",
+    "links":[{"label":"PDBbind","url":"http://www.pdbbind.org.cn/"}],
+    "tags":["相互作用","药物发现","AI训练"]
+  },
+  {
+    "db_type":"注释库","name":"STRING","full_name":"STRING（PPI网络）",
+    "main_data_type":"多源证据整合的蛋白质-蛋白质相互作用网络（含结构信息）",
+    "function":"构建跨物种PPI网络并给出综合评分",
+    "use_case":"通路/功能模块推断、候选基因优先级排序",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"STRING项目组",
+    "scale":"覆盖众多物种（PDF未给出具体数字）",
+    "key_features":[
+      "整合实验/预测/共表达/文献等证据并赋分",
+      "支持网络可视化、API与批量下载"
+    ],
+    "ai_relevance":[
+      "为功能预测、通路推断、结构-功能关联提供网络上下文"
+    ],
+    "relationships":[
+      "与结构/序列/功能注释库共同组成结构-功能知识网络"
+    ],
+    "access":"网页、API与下载",
+    "pdf_refs":"PDF§1.2.2（PDBbind/STRING段落）",
+    "links":[{"label":"STRING","url":"https://string-db.org/"}],
+    "tags":["相互作用","网络"]
+  },
+  {
+    "db_type":"注释库","name":"InterPro","full_name":"InterPro（功能注释元数据库）",
+    "main_data_type":"整合Pfam、SMART、CSA等成员库的功能签名并统一注释",
+    "function":"功能注释的“元数据库”（整合/去冗余/统一输出）",
+    "use_case":"结构-功能关联分析、自动化大规模注释",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"InterPro项目组（EMBL-EBI生态）",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "整合多个成员库签名并统一、去冗余",
+      "形成一站式更可靠注释，支持大规模自动化结构-功能关联"
+    ],
+    "ai_relevance":[
+      "为结构/功能预测模型提供更一致、更可靠的标签体系"
+    ],
+    "relationships":[
+      "整合Pfam/CSA等；与UniProt共同扮演信息枢纽"
+    ],
+    "access":"网页检索与批量工具生态",
+    "pdf_refs":"PDF§1.2.2（InterPro/UniProt段落）",
+    "links":[{"label":"InterPro","url":"https://www.ebi.ac.uk/interpro/"}],
+    "tags":["功能注释","整合","AI训练"]
+  },
+
+  {
+    "db_type":"综合库","name":"UniProt","full_name":"UniProt（序列中心综合知识库）",
+    "main_data_type":"序列为中心：结构、功能域、物种信息、文献引用等异构数据",
+    "function":"蛋白质最核心的综合性知识库与标识体系",
+    "use_case":"几乎所有蛋白研究的信息枢纽",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"UniProt联盟",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "以序列为中心提供唯一身份标识，便于跨库互链",
+      "整合PDB结构、Pfam结构域、物种信息、文献引用等"
+    ],
+    "ai_relevance":[
+      "结构预测与功能预测AI模型的重要序列与标签来源"
+    ],
+    "relationships":[
+      "与PDB、Pfam、InterPro等广泛互链，连接信息孤岛"
+    ],
+    "access":"网页、API与批量下载（FASTA/注释/ID映射等）",
+    "pdf_refs":"PDF§1.2.2（UniProt段落）",
+    "links":[{"label":"UniProt","url":"https://www.uniprot.org/"}],
+    "tags":["综合","序列中心","AI训练"]
+  },
+
+  {
+    "db_type":"专题库","name":"GPCRdb","full_name":"GPCRdb（GPCR家族深度注释）",
+    "main_data_type":"GPCR家族序列、结构、突变、配体等数据",
+    "function":"GPCR家族权威数据库",
+    "use_case":"促进GPCR药物设计与功能研究",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"GPCRdb项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "聚焦GPCR这一最大药物靶点家族",
+      "除结构外提供突变效应等深度注释，服务药物发现"
+    ],
+    "ai_relevance":[
+      "GPCR特化数据用于靶点专属模型训练/评测"
+    ],
+    "relationships":[
+      "可与PDB/AlphaFoldDB结构来源互补（结构+深度注释）"
+    ],
+    "access":"网页平台与数据导出",
+    "pdf_refs":"PDF§1.3.2（GPCRdb段落）",
+    "links":[{"label":"GPCRdb","url":"https://gpcrdb.org/"}],
+    "tags":["专题","药物发现","GPCR"]
+  },
+  {
+    "db_type":"专题库","name":"IMGT","full_name":"IMGT（免疫信息系统）",
+    "main_data_type":"免疫系统相关分子的基因、序列、结构数据",
+    "function":"免疫学领域黄金标准数据库",
+    "use_case":"支持加速抗体药物研发",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"IMGT项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "收集抗体/TCR等免疫相关分子的基因/序列/结构",
+      "精确定义CDR边界（抗体药物研发关键）"
+    ],
+    "ai_relevance":[
+      "为抗体/TCR结构预测与CDR设计提供标准化区域定义与注释"
+    ],
+    "relationships":[
+      "可与PDB/AlphaFoldDB结合用于免疫分子结构-功能研究"
+    ],
+    "access":"网页检索与导出",
+    "pdf_refs":"PDF§1.3.2（IMGT段落）",
+    "links":[{"label":"IMGT","url":"https://www.imgt.org/"}],
+    "tags":["专题","免疫","抗体"]
+  },
+  {
+    "db_type":"专题库","name":"NDB","full_name":"NDB（Nucleic Acid Database）",
+    "main_data_type":"核酸相关实验结构数据（DNA/RNA）",
+    "function":"特定收录核酸结构的核心资源",
+    "use_case":"核酸基础研究、核酸疫苗和药物研发",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"NDB平台",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "专门归档DNA/RNA三维结构（X射线、NMR等）",
+      "与以蛋白为主的通用结构库互补"
+    ],
+    "ai_relevance":[
+      "为RNA结构预测、核酸-蛋白相互作用建模提供实验基准"
+    ],
+    "relationships":[
+      "与PDB互补：聚焦核酸结构的专门组织与检索"
+    ],
+    "access":"网页检索与下载",
+    "pdf_refs":"PDF§1.3.2（NDB段落）",
+    "links":[{"label":"NDB","url":"http://ndbserver.rutgers.edu/"}],
+    "tags":["专题","核酸"]
+  },
+  {
+    "db_type":"专题库","name":"DisProt","full_name":"DisProt（无序蛋白数据库）",
+    "main_data_type":"人工注释+实验验证的内在无序蛋白/区域信息",
+    "function":"内在无序蛋白（IDP）相关数据资源",
+    "use_case":"无序蛋白功能研究与靶向药物研发",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"DisProt社区/项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "聚焦本质无序蛋白（IDPs），提供无序区域边界与证据",
+      "补足传统结构库“结构空白区”的研究需求"
+    ],
+    "ai_relevance":[
+      "为无序区域识别、结构置信度评估与功能预测提供标注"
+    ],
+    "relationships":[
+      "与PDB/AlphaFoldDB互补：关注难以形成稳定结构的区域/状态"
+    ],
+    "access":"网页检索与下载",
+    "pdf_refs":"PDF§1.3.2（DisProt段落）",
+    "links":[{"label":"DisProt","url":"https://disprot.org/"}],
+    "tags":["专题","无序蛋白"]
+  },
+  {
+    "db_type":"专题库","name":"PDBTM","full_name":"PDBTM（跨膜蛋白结构与注释）",
+    "main_data_type":"跨膜蛋白结构与跨膜段注释",
+    "function":"跨膜蛋白在膜上的空间排布与注释",
+    "use_case":"膜蛋白通道/转运/信号传导研究",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"PDBTM项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "提供跨膜段注释与结构坐标对应",
+      "服务膜环境下结构-功能分析"
+    ],
+    "ai_relevance":[
+      "为膜蛋白拓扑/定位预测提供参考与基准"
+    ],
+    "relationships":[
+      "与OPM互补（PDBTM偏注释，OPM偏取向）"
+    ],
+    "access":"网页检索与下载",
+    "pdf_refs":"PDF§1.3.2（PDBTM段落）",
+    "links":[{"label":"PDBTM","url":"https://pdbtm.enzim.hu/"}],
+    "tags":["专题","膜蛋白"]
+  },
+  {
+    "db_type":"专题库","name":"OPM","full_name":"OPM（膜中取向）",
+    "main_data_type":"膜蛋白在膜中的空间取向/定位信息",
+    "function":"跨膜螺旋的预测和定位（提供膜取向参考）",
+    "use_case":"膜蛋白相关研究（构象/功能/膜环境分析）",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"OPM项目组",
+    "scale":"（PDF未给出规模数字）",
+    "key_features":[
+      "提供结构在膜坐标系中的取向信息",
+      "与PDBTM等资源共同支撑膜蛋白空间排布分析"
+    ],
+    "ai_relevance":[
+      "可用于膜定位/取向预测标注与评测"
+    ],
+    "relationships":[
+      "与PDBTM互补"
+    ],
+    "access":"网页检索与下载",
+    "pdf_refs":"PDF§1.3.2（OPM段落）",
+    "links":[{"label":"OPM","url":"https://opm.phar.umich.edu/"}],
+    "tags":["专题","膜蛋白"]
+  },
+
+  {
+    "db_type":"预测库","name":"SWISS-MODEL","full_name":"SWISS-MODEL Repository（同源模建）",
+    "main_data_type":"同源建模预测结构与建模报告",
+    "function":"高精度同源模建数据库",
+    "use_case":"实验未知结构蛋白建模",
+    "established":"（PDF未给出明确年份）",
+    "maintainer":"SWISS-MODEL项目组",
+    "scale":"为数百万种蛋白提供高质量预测模型。",
+    "key_features":[
+      "传统预测范式代表：利用已知实验结构作为模板进行同源建模",
+      "适用于与已知结构存在同源关系的蛋白"
+    ],
+    "ai_relevance":[
+      "可作为模板/基线方法与数据资源，为AI预测提供对照与补充"
+    ],
+    "relationships":[
+      "与PDB（模板）强相关；与AlphaFoldDB（AI预测）互补"
+    ],
+    "access":"网页建模/仓库检索与下载",
+    "pdf_refs":"PDF§1.3.3（结构预测数据库段落）",
+    "links":[{"label":"SWISS-MODEL","url":"https://swissmodel.expasy.org/"}],
+    "tags":["预测"]
+  },
+  {
+    "db_type":"预测库","name":"AlphaFoldDB","full_name":"AlphaFold Protein Structure Database",
+    "main_data_type":"AlphaFold预测的蛋白三维结构与置信度指标（pLDDT等）",
+    "function":"全蛋白质组级预测结构数据库",
+    "use_case":"蛋白分类与注释、结构预测模型训练",
+    "established":"2021（DeepMind × EMBL-EBI合作建立并上线）",
+    "maintainer":"DeepMind 与 EMBL-EBI",
+    "scale":"覆盖人类及数十个物种、数千万条预测结构；提供坐标、pLDDT与与实验结构比对信息。",
+    "key_features":[
+      "规模化覆盖，大幅扩展结构空间",
+      "逐残基置信度（pLDDT）帮助识别可靠/不确定区域",
+      "与实验结构比对信息辅助判断可用性"
+    ],
+    "ai_relevance":[
+      "形成“AI预测→数据库化存储→反哺AI研究”的闭环",
+      "为下游功能注释与药物发现提供前所未有结构覆盖"
+    ],
+    "relationships":[
+      "与PDB实验结构协同使用；常用于补齐结构空白"
+    ],
+    "access":"网页检索与批量下载（坐标+置信度）",
+    "pdf_refs":"PDF§1.3.3（AlphaFoldDB段落）",
+    "links":[{"label":"AlphaFold DB","url":"https://alphafold.ebi.ac.uk/"}],
+    "tags":["预测","AI训练"]
+  }
+];
 
 const qEl = document.getElementById('q');
 const typeEl = document.getElementById('type');
@@ -153,34 +806,210 @@ const tbody = document.getElementById('tbody');
 const countEl = document.getElementById('count');
 const exportBtn = document.getElementById('export');
 
+let sortKey = 'db_type';
+let sortDir = 'asc';
+
+function norm(x) {
+  return (x ?? '').toString().toLowerCase();
+}
+function esc(s) {
+  return (s ?? '').toString()
+    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+    .replaceAll('"','&quot;').replaceAll("'","&#39;");
+}
+function hasTag(item, tag) {
+  if (!tag) return true;
+  return (item.tags || []).some(t => t === tag);
+}
+function sortData(arr) {
+  const dir = (sortDir === 'asc') ? 1 : -1;
+  const key = sortKey;
+  const out = arr.slice();
+  out.sort((a,b) => {
+    const va = norm(a[key]);
+    const vb = norm(b[key]);
+    if (va < vb) return -1*dir;
+    if (va > vb) return 1*dir;
+    return norm(a.name) < norm(b.name) ? -1 : (norm(a.name) > norm(b.name) ? 1 : 0);
+  });
+  return out;
+}
+function setSortIndicators() {
+  document.querySelectorAll('.si').forEach(el => el.textContent = '');
+  const el = document.getElementById('si-' + sortKey);
+  if (el) el.textContent = (sortDir === 'asc') ? '↑' : '↓';
+}
+function linkList(links) {
+  if (!links || !links.length) return '<span class="muted">—</span>';
+  return links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(' · ');
+}
+
 function render() {
   const q = norm(qEl.value).trim();
   const t = typeEl.value;
   const tag = tagEl.value;
+
   let filtered = DATA.filter(item => {
     if (t && item.db_type !== t) return false;
-    if (tag && (!item.tags || !item.tags.includes(tag))) return false;
+    if (!hasTag(item, tag)) return false;
     if (!q) return true;
-    const hay = [item.db_type, item.name, item.main_data_type, item.function].join(' ').toLowerCase();
+    const hay = [
+      item.db_type, item.name, item.full_name, item.main_data_type, item.function, item.use_case,
+      item.established, item.maintainer, item.scale, item.access, item.pdf_refs,
+      (item.key_features||[]).join(' '), (item.ai_relevance||[]).join(' '), (item.relationships||[]).join(' '),
+      (item.links||[]).map(x => x.label + ' ' + x.url).join(' '),
+      (item.tags||[]).join(' ')
+    ].join(' ').toLowerCase();
     return hay.includes(q);
   });
-  
+
+  filtered = sortData(filtered);
+
   tbody.innerHTML = '';
   countEl.textContent = `${filtered.length} / ${DATA.length}`;
+
   filtered.forEach((item) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><span class="pill">${esc(item.db_type)}</span></td><td><div style="font-weight:700;">${esc(item.name)}</div><div class="muted" style="font-size:12px;">${esc(item.full_name)}</div></td><td>${esc(item.main_data_type)}</td><td>${esc(item.function)}</td><td>${esc(item.use_case)}</td><td>${esc(item.maintainer || '—')}</td><td><button class="btn-sm" data-act="toggle">详情</button></td>`;
+    tr.innerHTML = `
+      <td><span class="pill">${esc(item.db_type)}</span></td>
+      <td>
+        <div style="font-weight:700;color:var(--text);">${esc(item.name)}</div>
+        <div class="muted" style="margin-top:4px;font-size:12px;">${esc(item.full_name||'')}</div>
+        <div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;">
+          ${(item.tags||[]).slice(0,3).map(t => `<span class="pill blue">${esc(t)}</span>`).join('')}
+        </div>
+      </td>
+      <td>${esc(item.main_data_type)}</td>
+      <td>${esc(item.function)}</td>
+      <td>${esc(item.use_case)}</td>
+      <td>${esc(item.maintainer || '—')}</td>
+      <td><button class="btn-sm" data-act="toggle">详情</button></td>
+    `;
     tbody.appendChild(tr);
+
+    const dtr = document.createElement('tr');
+    dtr.className = 'details-row';
+    dtr.style.display = 'none';
+    dtr.innerHTML = `
+      <td colspan="7">
+        <div class="details">
+          <div class="card">
+            <h3>建立时间 / 规模 / PDF依据</h3>
+            <div><b>建立：</b>${esc(item.established||'—')}</div>
+            <div style="margin-top:8px;"><b>规模：</b>${esc(item.scale||'—')}</div>
+            <div style="margin-top:8px;" class="muted"><b>PDF参考：</b>${esc(item.pdf_refs||'—')}</div>
+          </div>
+          <div class="card">
+            <h3>关键特征 & AI相关性</h3>
+            <ul>
+              ${(item.key_features||[]).map(x => `<li>${esc(x)}</li>`).join('') || '<li class="muted">—</li>'}
+            </ul>
+            <div style="margin-top:12px;font-weight:600;color:var(--text-sec);">AI关联：</div>
+            <ul>
+              ${(item.ai_relevance||[]).map(x => `<li>${esc(x)}</li>`).join('') || '<li class="muted">—</li>'}
+            </ul>
+          </div>
+          <div class="card">
+            <h3>访问与生态</h3>
+            <div><b>访问：</b>${esc(item.access||'—')}</div>
+            <div style="margin-top:8px;"><b>关系：</b>${
+              (item.relationships||[]).length
+                ? `<ul>${item.relationships.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`
+                : '<span class="muted">—</span>'
+            }</div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f1f5f9;" class="mono">${linkList(item.links)}</div>
+          </div>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(dtr);
   });
+
+  setSortIndicators();
 }
 
+function collapseAll() {
+  document.querySelectorAll('.details-row').forEach(r => r.style.display = 'none');
+  document.querySelectorAll('button[data-act="toggle"]').forEach(b => b.textContent = '详情');
+}
+function expandAll() {
+  document.querySelectorAll('.details-row').forEach(r => r.style.display = '');
+  document.querySelectorAll('button[data-act="toggle"]').forEach(b => b.textContent = '收起');
+}
+
+tbody.addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-act="toggle"]');
+  if (!btn) return;
+  const row = btn.closest('tr');
+  const next = row.nextElementSibling;
+  if (!next || !next.classList.contains('details-row')) return;
+  const open = (next.style.display !== 'none');
+  next.style.display = open ? 'none' : '';
+  btn.textContent = open ? '详情' : '收起';
+});
+
+document.querySelectorAll('thead th[data-key]').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.getAttribute('data-key');
+    if (sortKey === k) sortDir = (sortDir === 'asc') ? 'desc' : 'asc';
+    else { sortKey = k; sortDir = 'asc'; }
+    render();
+  });
+});
+
+[qEl, typeEl, tagEl].forEach(el => el.addEventListener('input', render));
+
+actionEl.addEventListener('change', () => {
+  const v = actionEl.value;
+  actionEl.value = '';
+  if (v === 'reset') {
+    qEl.value = ''; typeEl.value = ''; tagEl.value = '';
+    sortKey = 'db_type'; sortDir = 'asc';
+    render();
+  } else if (v === 'collapse') {
+    collapseAll();
+  } else if (v === 'expand') {
+    expandAll();
+  }
+});
+
+exportBtn.addEventListener('click', () => {
+  const q = norm(qEl.value).trim();
+  const t = typeEl.value;
+  const tag = tagEl.value;
+
+  let filtered = DATA.filter(item => {
+    if (t && item.db_type !== t) return false;
+    if (!hasTag(item, tag)) return false;
+    if (!q) return true;
+    const hay = [
+      item.db_type, item.name, item.full_name, item.main_data_type, item.function, item.use_case,
+      item.established, item.maintainer, item.scale, item.access, item.pdf_refs,
+      (item.key_features||[]).join(' '), (item.ai_relevance||[]).join(' '), (item.relationships||[]).join(' '),
+      (item.links||[]).map(x => x.label + ' ' + x.url).join(' '),
+      (item.tags||[]).join(' ')
+    ].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  filtered = sortData(filtered);
+
+  const blob = new Blob([JSON.stringify(filtered, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '结构生物信息学数据库_筛选结果.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// build type options
 [...new Set(DATA.map(d => d.db_type))].forEach(t => {
   const o = document.createElement('option');
   o.value = t; o.textContent = t;
   typeEl.appendChild(o);
 });
-[qEl, typeEl, tagEl, actionEl].forEach(el => el.addEventListener('change', render));
-qEl.addEventListener('input', render);
 
 render();
 </script>

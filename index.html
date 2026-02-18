@@ -6,173 +6,526 @@
     <title>结构生物信息学数据库导航</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['Noto Serif SC', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        /* ===== 全局基础 ===== */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; overflow-x: hidden; }
+
+        /* ===== Hero 动态渐变背景 ===== */
+        .hero-gradient {
+            background: linear-gradient(-45deg, #0f172a, #1e3a5f, #1a365d, #0c4a6e);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== DNA 粒子装饰 ===== */
+        .hero-particles {
+            position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+        }
+        .hero-particles::before,
+        .hero-particles::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.08;
+            animation: float 8s ease-in-out infinite;
+        }
+        .hero-particles::before {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, #60a5fa, transparent 70%);
+            top: -10%; left: -5%;
+        }
+        .hero-particles::after {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, #a78bfa, transparent 70%);
+            bottom: -10%; right: -5%;
+            animation-delay: 4s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* ===== 卡片悬浮 & 光晕 ===== */
+        .tool-card {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .tool-card:hover {
+            transform: translateY(-8px);
+        }
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--glow-from), var(--glow-to));
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+        .tool-card-blue { --glow-from: #3b82f6; --glow-to: #06b6d4; }
+        .tool-card-green { --glow-from: #10b981; --glow-to: #34d399; }
+        .tool-card-purple { --glow-from: #8b5cf6; --glow-to: #a78bfa; }
+
+        /* ===== Banner 动画色块 ===== */
+        .card-banner {
+            position: relative; overflow: hidden;
+        }
+        .card-banner::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 100%);
+        }
+
+        /* ===== 计数器动画 ===== */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+            transition: all 0.3s;
+        }
+        .stat-card:hover .stat-number {
+            transform: scale(1.1);
+        }
+        .stat-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12);
+        }
+
+        /* ===== 分类标签条 ===== */
+        .cat-card {
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .cat-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px -4px rgba(0,0,0,0.1);
+        }
+
+        /* ===== 快速链接按钮 ===== */
+        .quick-link {
+            transition: all 0.3s;
+        }
+        .quick-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(0,0,0,0.1);
+        }
+        .quick-link:hover .link-icon {
+            transform: translateX(4px);
+        }
+        .link-icon {
+            transition: transform 0.3s;
+        }
+
+        /* ===== 滚动淡入 ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== 渐变分隔线 ===== */
+        .gradient-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        /* ===== 引用区域 ===== */
+        .reference-card {
+            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 50%, #fef08a 100%);
+            border: 1px solid #fde68a;
+        }
     </style>
 </head>
-<body class="bg-slate-50">
-    <!-- Header -->
-    <header class="gradient-bg text-white py-16 mb-12">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <div class="inline-flex items-center justify-center p-4 bg-white/20 rounded-full mb-6">
-                <i class="ph-duotone ph-dna text-5xl"></i>
-            </div>
-            <h1 class="text-5xl font-bold mb-4">结构生物信息学数据库导航</h1>
-            <p class="text-xl text-white/90">交互式工具与可视化资源，助力蛋白质结构研究</p>
-        </div>
-    </header>
+<body class="bg-slate-50 text-slate-900">
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 pb-16">
+    <!-- ========== HERO ========== -->
+    <section class="hero-gradient relative min-h-[520px] flex items-center justify-center text-white overflow-hidden">
+        <div class="hero-particles"></div>
         
-        <!-- Tools Section -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">📚 核心工具</h2>
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center py-20">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-white/10 backdrop-blur rounded-2xl mb-8 border border-white/10">
+                <i class="ph-duotone ph-dna text-5xl text-blue-300"></i>
+            </div>
             
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Tool 1 -->
-                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200">
-                    <div class="h-24 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-3">
-                            <i class="ph-fill ph-magnifying-glass text-2xl text-blue-600"></i>
-                            <h3 class="text-xl font-bold text-slate-900">数据库检索系统</h3>
+            <h1 class="text-4xl md:text-6xl font-bold mb-5 tracking-tight leading-tight font-serif">
+                结构生物信息学<br class="hidden md:block">数据库导航
+            </h1>
+            
+            <p class="text-lg md:text-xl text-blue-200/90 max-w-2xl mx-auto leading-relaxed mb-10">
+                交互式检索、分类导航与演进可视化，助力蛋白质结构研究
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#tools" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-slate-900 rounded-xl font-semibold text-base hover:bg-blue-50 transition-all shadow-lg shadow-white/10 hover:shadow-white/20">
+                    <i class="ph-bold ph-rocket-launch"></i>
+                    开始探索
+                </a>
+                <a href="https://github.com/PWO-CHINA/structural-bioinformatics-databases" target="_blank" class="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 backdrop-blur text-white rounded-xl font-semibold text-base border border-white/20 hover:bg-white/20 transition-all">
+                    <i class="ph-bold ph-github-logo"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+                <path d="M0 60V20C360 50 720 0 1080 30C1260 45 1380 55 1440 20V60H0Z" fill="#f8fafc"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ========== 核心工具 ========== -->
+    <section id="tools" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="text-center mb-14 reveal">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-50 text-blue-700 text-sm font-semibold rounded-full mb-4 border border-blue-100">
+                <i class="ph-fill ph-compass"></i> 核心工具
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">三大交互式工具</h2>
+            <p class="text-slate-500 max-w-lg mx-auto">从检索、导航到可视化，全方位辅助结构生物信息学研究</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8 reveal">
+            <!-- 工具1：检索系统 -->
+            <div class="tool-card tool-card-blue bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="card-banner h-36 bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                    <i class="ph-duotone ph-magnifying-glass-plus text-7xl text-white/30"></i>
+                </div>
+                <div class="p-7">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                            <i class="ph-fill ph-magnifying-glass text-xl text-blue-600"></i>
                         </div>
-                        <p class="text-slate-600 text-sm mb-4">支持关键词搜索、多维筛选与动态排序的数据库查询工具。快速找到你需要的数据库。</p>
-                        <a href="./databases-searchable.html" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
-                            打开工具 <i class="ph-duotone ph-arrow-right"></i>
-                        </a>
-                        <p class="text-xs text-slate-500 mt-3">✨ 搜索 | 筛选 | 排序 | 导出 JSON</p>
+                        <h3 class="text-xl font-bold text-slate-900">数据库检索系统</h3>
                     </div>
+                    <p class="text-slate-500 text-sm mb-5 leading-relaxed">
+                        支持关键词搜索、多维筛选、动态排序与 JSON 导出。涵盖 20+ 个核心数据库的全面信息。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium border border-blue-100">搜索</span>
+                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium border border-blue-100">筛选</span>
+                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium border border-blue-100">排序</span>
+                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium border border-blue-100">导出</span>
+                        <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-lg font-medium border border-blue-100">详情展开</span>
+                    </div>
+                    <a href="./databases-searchable.html" class="group inline-flex items-center gap-2 w-full justify-center px-5 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-sm">
+                        打开检索系统
+                        <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
+            </div>
 
-                <!-- Tool 2 -->
-                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200">
-                    <div class="h-24 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-3">
-                            <i class="ph-fill ph-book text-2xl text-emerald-600"></i>
-                            <h3 class="text-xl font-bold text-slate-900">数据库导航平台</h3>
+            <!-- 工具2：导航平台 -->
+            <div class="tool-card tool-card-green bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="card-banner h-36 bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+                    <i class="ph-duotone ph-compass text-7xl text-white/30"></i>
+                </div>
+                <div class="p-7">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                            <i class="ph-fill ph-book-open text-xl text-emerald-600"></i>
                         </div>
-                        <p class="text-slate-600 text-sm mb-4">分类卡片展示、核心服务介绍、一键访问官网。快速了解各库的特性与能力。</p>
-                        <a href="./databases-navigator.html" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition">
-                            打开工具 <i class="ph-duotone ph-arrow-right"></i>
-                        </a>
-                        <p class="text-xs text-slate-500 mt-3">✨ 分类展示 | 服务介绍 | 快速链接</p>
+                        <h3 class="text-xl font-bold text-slate-900">数据库导航平台</h3>
                     </div>
+                    <p class="text-slate-500 text-sm mb-5 leading-relaxed">
+                        分类卡片展示核心服务与工具说明，一键跳转至各数据库官网。快速了解每个库的特色。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-medium border border-emerald-100">分类展示</span>
+                        <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-medium border border-emerald-100">服务介绍</span>
+                        <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-medium border border-emerald-100">快速链接</span>
+                        <span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-lg font-medium border border-emerald-100">专家提示</span>
+                    </div>
+                    <a href="./databases-navigator.html" class="group inline-flex items-center gap-2 w-full justify-center px-5 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all shadow-sm">
+                        打开导航平台
+                        <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
+            </div>
 
-                <!-- Tool 3 -->
-                <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200">
-                    <div class="h-24 bg-gradient-to-r from-purple-400 to-purple-600"></div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-2 mb-3">
-                            <i class="ph-fill ph-hourglass text-2xl text-purple-600"></i>
-                            <h3 class="text-xl font-bold text-slate-900">演进时间线</h3>
+            <!-- 工具3：演进时间线 -->
+            <div class="tool-card tool-card-purple bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="card-banner h-36 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+                    <i class="ph-duotone ph-clock-countdown text-7xl text-white/30"></i>
+                </div>
+                <div class="p-7">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-violet-50 rounded-xl flex items-center justify-center">
+                            <i class="ph-fill ph-hourglass-medium text-xl text-violet-600"></i>
                         </div>
-                        <p class="text-slate-600 text-sm mb-4">交互式时间线展示结构生物学的技术演进与数据库发展历程。从 1971 到 2026。</p>
-                        <a href="./databases-timeline.html" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition">
-                            打开工具 <i class="ph-duotone ph-arrow-right"></i>
-                        </a>
-                        <p class="text-xs text-slate-500 mt-3">✨ 实验奠基 | 技术爆炸 | AI 革命</p>
+                        <h3 class="text-xl font-bold text-slate-900">演进时间线</h3>
                     </div>
+                    <p class="text-slate-500 text-sm mb-5 leading-relaxed">
+                        交互式时间线展示结构生物学的技术演进。从 1958 年 X-ray 奠基到 AI 革命的双螺旋叙事。
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2.5 py-1 bg-violet-50 text-violet-700 text-xs rounded-lg font-medium border border-violet-100">实验奠基</span>
+                        <span class="px-2.5 py-1 bg-violet-50 text-violet-700 text-xs rounded-lg font-medium border border-violet-100">技术爆炸</span>
+                        <span class="px-2.5 py-1 bg-violet-50 text-violet-700 text-xs rounded-lg font-medium border border-violet-100">AI 革命</span>
+                    </div>
+                    <a href="./databases-timeline.html" class="group inline-flex items-center gap-2 w-full justify-center px-5 py-3 bg-violet-600 text-white rounded-xl font-semibold hover:bg-violet-700 transition-all shadow-sm">
+                        打开时间线
+                        <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Quick Stats -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">📊 核心统计</h2>
-            <div class="grid md:grid-cols-4 gap-4">
-                <div class="bg-white p-6 rounded-lg border border-slate-200 text-center">
-                    <div class="text-4xl font-bold text-blue-600 mb-2">24+</div>
-                    <p class="text-slate-600 text-sm">万条 PDB 结构</p>
+    <!-- ========== 渐变分割线 ========== -->
+    <div class="gradient-divider mx-auto max-w-5xl"></div>
+
+    <!-- ========== 核心统计 ========== -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="text-center mb-12 reveal">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-50 text-emerald-700 text-sm font-semibold rounded-full mb-4 border border-emerald-100">
+                <i class="ph-fill ph-chart-bar-horizontal"></i> 关键数据
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">核心统计</h2>
+            <p class="text-slate-500">主要数据库的最新规模概览</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-5 reveal">
+            <div class="stat-card bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                <div class="w-12 h-12 mx-auto bg-blue-50 rounded-xl flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-cube text-2xl text-blue-600"></i>
                 </div>
-                <div class="bg-white p-6 rounded-lg border border-slate-200 text-center">
-                    <div class="text-4xl font-bold text-emerald-600 mb-2">千万</div>
-                    <p class="text-slate-600 text-sm">AlphaFoldDB 预测</p>
+                <div class="stat-number text-4xl font-bold text-blue-600 mb-1">24万+</div>
+                <p class="text-slate-500 text-sm font-medium">PDB 实验结构</p>
+            </div>
+            <div class="stat-card bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                <div class="w-12 h-12 mx-auto bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-brain text-2xl text-emerald-600"></i>
                 </div>
-                <div class="bg-white p-6 rounded-lg border border-slate-200 text-center">
-                    <div class="text-4xl font-bold text-purple-600 mb-2">19K+</div>
-                    <p class="text-slate-600 text-sm">Pfam 蛋白家族</p>
+                <div class="stat-number text-4xl font-bold text-emerald-600 mb-1">千万+</div>
+                <p class="text-slate-500 text-sm font-medium">AlphaFold 预测</p>
+            </div>
+            <div class="stat-card bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                <div class="w-12 h-12 mx-auto bg-purple-50 rounded-xl flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-tag text-2xl text-purple-600"></i>
                 </div>
-                <div class="bg-white p-6 rounded-lg border border-slate-200 text-center">
-                    <div class="text-4xl font-bold text-orange-600 mb-2">3+</div>
-                    <p class="text-slate-600 text-sm">万条 EMDB 密度图</p>
+                <div class="stat-number text-4xl font-bold text-purple-600 mb-1">19K+</div>
+                <p class="text-slate-500 text-sm font-medium">Pfam 蛋白家族</p>
+            </div>
+            <div class="stat-card bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                <div class="w-12 h-12 mx-auto bg-orange-50 rounded-xl flex items-center justify-center mb-4">
+                    <i class="ph-fill ph-aperture text-2xl text-orange-600"></i>
+                </div>
+                <div class="stat-number text-4xl font-bold text-orange-600 mb-1">3万+</div>
+                <p class="text-slate-500 text-sm font-medium">EMDB 电镜密度图</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 渐变分割线 ========== -->
+    <div class="gradient-divider mx-auto max-w-5xl"></div>
+
+    <!-- ========== 数据库分类 ========== -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="text-center mb-12 reveal">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-violet-50 text-violet-700 text-sm font-semibold rounded-full mb-4 border border-violet-100">
+                <i class="ph-fill ph-folders"></i> 分类体系
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">数据库分类</h2>
+            <p class="text-slate-500">六大领域覆盖结构生物信息学全景</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 reveal">
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-blue-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-database text-xl text-blue-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">通用库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">PDB · EMDB · EMPIAR</p>
+                <p class="text-slate-400 text-xs">最权威的原始实验结构数据仓库</p>
+            </div>
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-indigo-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-tree-structure text-xl text-indigo-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">分类库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">SCOP · CATH</p>
+                <p class="text-slate-400 text-xs">结构域分类与进化关系分析</p>
+            </div>
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-purple-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-note-pencil text-xl text-purple-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">注释库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">Pfam · SMART · CSA · PDBbind · STRING · InterPro</p>
+                <p class="text-slate-400 text-xs">功能域识别、相互作用、催化位点注释</p>
+            </div>
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-green-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-circles-three-plus text-xl text-green-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">综合库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">UniProt</p>
+                <p class="text-slate-400 text-xs">蛋白质核心综合知识库与信息枢纽</p>
+            </div>
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-orange-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-target text-xl text-orange-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">专题库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">GPCRdb · IMGT · NDB · DisProt · PDBTM · OPM</p>
+                <p class="text-slate-400 text-xs">GPCR、免疫、核酸、膜蛋白等专题深度数据</p>
+            </div>
+            <div class="cat-card p-6 bg-white rounded-xl border-l-4 border-rose-500 shadow-sm">
+                <div class="flex items-center gap-3 mb-2">
+                    <i class="ph-fill ph-cpu text-xl text-rose-500"></i>
+                    <h3 class="font-bold text-slate-900 text-lg">预测库</h3>
+                </div>
+                <p class="text-slate-700 text-sm font-medium mb-1">AlphaFoldDB · SWISS-MODEL</p>
+                <p class="text-slate-400 text-xs">AI 预测与同源模建的全基因组级结构</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 渐变分割线 ========== -->
+    <div class="gradient-divider mx-auto max-w-5xl"></div>
+
+    <!-- ========== 快速链接 ========== -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div class="text-center mb-12 reveal">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-50 text-orange-700 text-sm font-semibold rounded-full mb-4 border border-orange-100">
+                <i class="ph-fill ph-link"></i> 快速访问
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-3">常用链接</h2>
+            <p class="text-slate-500">直接跳转至核心数据库</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+            <a href="https://www.rcsb.org" target="_blank" rel="noopener" class="quick-link p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm text-center group">
+                <div class="w-10 h-10 mx-auto bg-blue-50 rounded-lg flex items-center justify-center mb-3">
+                    <span class="text-lg font-bold text-blue-600">P</span>
+                </div>
+                <p class="font-bold text-slate-900 mb-1">RCSB PDB</p>
+                <p class="text-xs text-slate-400 mb-2">蛋白质结构权威库</p>
+                <i class="ph ph-arrow-up-right link-icon text-slate-300 group-hover:text-blue-500"></i>
+            </a>
+            <a href="https://www.ebi.ac.uk/emdb/" target="_blank" rel="noopener" class="quick-link p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm text-center group">
+                <div class="w-10 h-10 mx-auto bg-cyan-50 rounded-lg flex items-center justify-center mb-3">
+                    <span class="text-lg font-bold text-cyan-600">E</span>
+                </div>
+                <p class="font-bold text-slate-900 mb-1">EMDB</p>
+                <p class="text-xs text-slate-400 mb-2">冷冻电镜数据库</p>
+                <i class="ph ph-arrow-up-right link-icon text-slate-300 group-hover:text-cyan-500"></i>
+            </a>
+            <a href="https://alphafold.ebi.ac.uk/" target="_blank" rel="noopener" class="quick-link p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm text-center group">
+                <div class="w-10 h-10 mx-auto bg-emerald-50 rounded-lg flex items-center justify-center mb-3">
+                    <span class="text-lg font-bold text-emerald-600">A</span>
+                </div>
+                <p class="font-bold text-slate-900 mb-1">AlphaFoldDB</p>
+                <p class="text-xs text-slate-400 mb-2">AI 预测结构</p>
+                <i class="ph ph-arrow-up-right link-icon text-slate-300 group-hover:text-emerald-500"></i>
+            </a>
+            <a href="https://www.uniprot.org/" target="_blank" rel="noopener" class="quick-link p-5 bg-white rounded-xl border border-slate-200/80 shadow-sm text-center group">
+                <div class="w-10 h-10 mx-auto bg-purple-50 rounded-lg flex items-center justify-center mb-3">
+                    <span class="text-lg font-bold text-purple-600">U</span>
+                </div>
+                <p class="font-bold text-slate-900 mb-1">UniProt</p>
+                <p class="text-xs text-slate-400 mb-2">综合知识库</p>
+                <i class="ph ph-arrow-up-right link-icon text-slate-300 group-hover:text-purple-500"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========== 渐变分割线 ========== -->
+    <div class="gradient-divider mx-auto max-w-5xl"></div>
+
+    <!-- ========== 原文参考 ========== -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 reveal">
+        <div class="reference-card rounded-2xl p-8 text-center">
+            <div class="w-14 h-14 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center mb-5 border border-amber-200">
+                <i class="ph-fill ph-book-bookmark text-2xl text-amber-700"></i>
+            </div>
+            <h3 class="text-lg font-bold text-amber-900 mb-2">原文参考文献</h3>
+            <p class="text-sm text-amber-800 mb-1 font-serif">《清华大学学报(自然科学版)》2025年第65卷第12期</p>
+            <p class="text-sm text-amber-700 mb-5 font-serif">结构生物信息学常用数据库综述</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="https://oversea.cnki.net/kcms2/article/abstract?v=adNygMj_jVBuz1-yFiJY953hxNQlRJzy-S-2-nQFAb9SWU-bVP7s2BAmEAmprwg02ITt9mrMbard62Ls1P6i_ICfNtFB4o4AlDkbmD7_L4f1bkZsEBUntzNMkncj0fpvLMcsDe936kOAckGP2c0gWB-fEZWVVpzVYHbCK8WmRb4=&uniplatform=OVERSEA" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-700 text-white rounded-lg text-sm font-semibold hover:bg-amber-800 transition shadow-sm">
+                    <i class="ph-bold ph-globe"></i> 海外版 (CNKI Oversea)
+                </a>
+                <a href="https://link.cnki.net/doi/10.16511/j.cnki.qhdxxb.2025.21.056" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-amber-800 rounded-lg text-sm font-semibold border border-amber-300 hover:bg-amber-50 transition shadow-sm">
+                    <i class="ph-bold ph-flag-banner"></i> 国内版 (CNKI)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-slate-900 text-slate-300 mt-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                        <i class="ph-duotone ph-dna text-2xl text-blue-400"></i>
+                        <span class="font-bold text-white text-lg">结构生物信息学数据库导航</span>
+                    </div>
+                    <p class="text-sm text-slate-400">
+                        由 <a href="https://github.com/PWO-CHINA" class="text-blue-400 hover:text-blue-300 transition">Qian Wenda (PWO-CHINA)</a> 维护
+                    </p>
+                </div>
+                <div class="flex items-center gap-5">
+                    <a href="https://github.com/PWO-CHINA/structural-bioinformatics-databases" target="_blank" rel="noopener" class="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition">
+                        <i class="ph-fill ph-github-logo text-xl"></i>
+                        GitHub 仓库
+                    </a>
                 </div>
             </div>
-        </section>
-
-        <!-- Database Categories -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">🏢 数据库分类</h2>
-            <div class="grid md:grid-cols-3 gap-4">
-                <div class="p-6 bg-white rounded-lg border-l-4 border-blue-500">
-                    <h3 class="font-bold text-slate-900 mb-2">通用库</h3>
-                    <p class="text-slate-600 text-sm">PDB, EMDB, EMPIAR</p>
-                    <p class="text-xs text-slate-500 mt-2">原始实验结构数据、最权威</p>
-                </div>
-                <div class="p-6 bg-white rounded-lg border-l-4 border-emerald-500">
-                    <h3 class="font-bold text-slate-900 mb-2">分类库</h3>
-                    <p class="text-slate-600 text-sm">SCOP, CATH</p>
-                    <p class="text-xs text-slate-500 mt-2">结构关系分类、进化视角</p>
-                </div>
-                <div class="p-6 bg-white rounded-lg border-l-4 border-purple-500">
-                    <h3 class="font-bold text-slate-900 mb-2">注释库</h3>
-                    <p class="text-slate-600 text-sm">Pfam, InterPro, UniProt</p>
-                    <p class="text-xs text-slate-500 mt-2">功能注释、序列分析</p>
-                </div>
-                <div class="p-6 bg-white rounded-lg border-l-4 border-red-500">
-                    <h3 class="font-bold text-slate-900 mb-2">预测库</h3>
-                    <p class="text-slate-600 text-sm">AlphaFoldDB, SWISS-MODEL</p>
-                    <p class="text-xs text-slate-500 mt-2">AI 预测、全基因组覆盖</p>
-                </div>
-                <div class="p-6 bg-white rounded-lg border-l-4 border-indigo-500">
-                    <h3 class="font-bold text-slate-900 mb-2">专题库</h3>
-                    <p class="text-slate-600 text-sm">GPCRdb, IMGT, DisProt</p>
-                    <p class="text-xs text-slate-500 mt-2">特定生物学主题深度数据</p>
-                </div>
-                <div class="p-6 bg-white rounded-lg border-l-4 border-cyan-500">
-                    <h3 class="font-bold text-slate-900 mb-2">综合库</h3>
-                    <p class="text-slate-600 text-sm">UniProt</p>
-                    <p class="text-xs text-slate-500 mt-2">信息中枢，跨库互联</p>
-                </div>
+            <div class="mt-8 pt-6 border-t border-slate-800 text-center">
+                <p class="text-xs text-slate-500">
+                    <i class="ph-fill ph-cpu mr-1"></i>
+                    内容由 AI 辅助生成（GitHub Copilot） · 2026年2月
+                </p>
             </div>
-        </section>
-
-        <!-- Quick Links -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">🔗 快速链接</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="https://www.rcsb.org" target="_blank" class="p-4 bg-white rounded-lg border border-slate-200 hover:shadow-md transition text-center">
-                    <p class="font-semibold text-slate-900 mb-1">RCSB PDB</p>
-                    <p class="text-xs text-slate-500">蛋白质结构权威库</p>
-                </a>
-                <a href="https://www.ebi.ac.uk/emdb/" target="_blank" class="p-4 bg-white rounded-lg border border-slate-200 hover:shadow-md transition text-center">
-                    <p class="font-semibold text-slate-900 mb-1">EMDB</p>
-                    <p class="text-xs text-slate-500">冷冻电镜数据库</p>
-                </a>
-                <a href="https://alphafold.ebi.ac.uk/" target="_blank" class="p-4 bg-white rounded-lg border border-slate-200 hover:shadow-md transition text-center">
-                    <p class="font-semibold text-slate-900 mb-1">AlphaFoldDB</p>
-                    <p class="text-xs text-slate-500">AI 预测结构</p>
-                </a>
-                <a href="https://www.uniprot.org/" target="_blank" class="p-4 bg-white rounded-lg border border-slate-200 hover:shadow-md transition text-center">
-                    <p class="font-semibold text-slate-900 mb-1">UniProt</p>
-                    <p class="text-xs text-slate-500">综合知识库</p>
-                </a>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 py-8 mt-16">
-        <div class="max-w-6xl mx-auto px-4 text-center text-sm">
-            <p>结构生物信息学数据库导航与可视化 | <a href="https://github.com/PWO-CHINA/structural-bioinformatics-databases" class="text-blue-400 hover:text-blue-300">GitHub</a></p>
-            <p class="mt-2 text-xs text-slate-500">由 <a href="https://github.com/PWO-CHINA" class="text-blue-400 hover:text-blue-300">Qian Wenda (PWO-CHINA)</a> 维护 | 2026年2月</p>
         </div>
     </footer>
+
+    <!-- ========== 滚动动画脚本 ========== -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>

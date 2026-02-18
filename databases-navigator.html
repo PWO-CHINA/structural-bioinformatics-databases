@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>结构生物信息学数据库导航</title>
+    <title>结构生物信息学常用数据库导航</title>
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
     <style>
         body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
         .glass-header {
@@ -16,15 +21,25 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #e2e8f0;
         }
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Tooltip style */
+        .tooltip-trigger:hover .tooltip-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useMemo } = React;
+
+        // 数据库源数据
         const databaseData = [
             {
                 type: "通用库",
@@ -37,9 +52,11 @@
                     "高级搜索 (ID/作者/配体)",
                     "BLAST 同源序列搜索",
                     "Mol* 在线 3D 可视化",
-                    "结构比对与叠合分析"
+                    "结构比对与叠合分析",
+                    "RESTful API 自动化访问"
                 ],
-                scenario: "基础研究、结构生物学、AI模型训练"
+                scenario: "基础研究、结构生物学、AI模型训练",
+                note: "包含 RCSB PDB, PDBe, PDBj, PDBc"
             },
             {
                 type: "通用库",
@@ -57,18 +74,49 @@
                 scenario: "结构解析算法开发、冷冻电镜方法学开发"
             },
             {
+                type: "通用库",
+                name: "EMPIAR",
+                fullName: "Electron Microscopy Public Image Archive",
+                url: "https://www.ebi.ac.uk/empiar/",
+                dataType: "原始二维显微图像、颗粒栈",
+                function: "EMDB 的补充资源，原始数据归档",
+                services: [
+                    "TB 级原始图像集存储",
+                    "Aspera 高速数据传输",
+                    "验证重建结果可靠性",
+                    "方法学开发基准数据集"
+                ],
+                scenario: "冷冻电镜结构解析相关算法开发"
+            },
+            {
                 type: "分类库",
                 name: "SCOP",
                 fullName: "Structural Classification of Proteins",
-                url: "https://scop.berkeley.edu/",
+                url: "https://scop.mrc-lmb.cam.ac.uk/",
                 dataType: "蛋白质家族、结构域分类",
                 function: "结构进化关系分类权威",
                 services: [
-                    "专家手工审核分类",
+                    "专家手工审核分类 (Class/Fold...)",
+                    "SCOP 2.0 自动化辅助分类",
                     "进化同源路径树状浏览",
                     "结构域边界精确定义"
                 ],
                 scenario: "结构与进化关系、辅助结构预测"
+            },
+            {
+                type: "分类库",
+                name: "CATH",
+                fullName: "Class, Architecture, Topology, Homology",
+                url: "https://www.cathdb.info/",
+                dataType: "结构分层分类、结构域边界",
+                function: "半自动化结构分层分类",
+                services: [
+                    "CATHEDRAL 结构比对算法",
+                    "功能家族 (FunFams) 聚类",
+                    "拓扑结构可视化浏览",
+                    "同源超家族检索"
+                ],
+                scenario: "蛋白质结构预测辅助"
             },
             {
                 type: "注释库",
@@ -80,9 +128,86 @@
                 services: [
                     "HMM 隐马尔可夫模型搜索",
                     "蛋白质结构域架构分析",
-                    "物种分布树状图"
+                    "物种分布树状图",
+                    "序列特征批量扫描"
                 ],
-                scenario: "结构域注释、进化研究"
+                scenario: "结构域注释、进化研究",
+                note: "现已整合至 InterPro"
+            },
+            {
+                type: "注释库",
+                name: "SMART",
+                fullName: "Simple Modular Architecture Research Tool",
+                url: "http://smart.embl.de/",
+                dataType: "移动功能域、信号肽数据",
+                function: "信号传导与移动域识别",
+                services: [
+                    "特定功能域 HMM 识别",
+                    "结构域架构图生成",
+                    "基因组模式分析",
+                    "序列特征交互式注释"
+                ],
+                scenario: "推断未知序列功能、AI 引导"
+            },
+            {
+                type: "注释库",
+                name: "CSA",
+                fullName: "Catalytic Site Atlas",
+                url: "https://www.ebi.ac.uk/thornton-srv/m-csa/",
+                dataType: "酶活性中心、催化残基",
+                function: "酶活性中心特征标注",
+                services: [
+                    "文献挖掘活性位点",
+                    "同源推断催化残基",
+                    "3D 催化机制可视化",
+                    "酶反应机理分类检索"
+                ],
+                scenario: "酶工程化设计"
+            },
+            {
+                type: "注释库",
+                name: "PDBbind",
+                fullName: "PDBbind Database",
+                url: "http://www.pdbbind.org.cn/",
+                dataType: "蛋白-配体复合物、亲和力",
+                function: "分子相互作用关键数据",
+                services: [
+                    "结合亲和力 (Ki/Kd/IC50) 检索",
+                    "精选复合物结构集下载",
+                    "结构-活性关系分析",
+                    "多样的配体结构格式"
+                ],
+                scenario: "药物设计、AI 亲和力预测"
+            },
+            {
+                type: "注释库",
+                name: "STRING",
+                fullName: "Search Tool for Recurring Instances of Neighbouring Genes",
+                url: "https://string-db.org/",
+                dataType: "多源 PPI 网络数据",
+                function: "蛋白质相互作用网络",
+                services: [
+                    "交互式蛋白互作网络图",
+                    "功能富集分析 (GO/KEGG)",
+                    "共表达与文本挖掘证据整合",
+                    "跨物种同源映射"
+                ],
+                scenario: "细胞通路、功能模块协作研究"
+            },
+            {
+                type: "注释库",
+                name: "InterPro",
+                fullName: "Integrative Protein Signature Database",
+                url: "https://www.ebi.ac.uk/interpro/",
+                dataType: "整合的功能标签签名",
+                function: "功能注释元数据库",
+                services: [
+                    "跨库 (Pfam/CATH等) 统一搜索",
+                    "InterProScan 序列扫描工具",
+                    "结构-功能关联视图",
+                    "全基因组注释集"
+                ],
+                scenario: "结构-功能关联、精确预测"
             },
             {
                 type: "综合库",
@@ -94,113 +219,395 @@
                 services: [
                     "BLAST 序列比对",
                     "ID 映射 (Mapping) 服务",
-                    "变异与修饰位点查看"
+                    "变异与修饰位点查看",
+                    "知识图谱式数据整合"
                 ],
                 scenario: "生物学全方位信息查询"
+            },
+            {
+                type: "专题库",
+                name: "GPCRdb",
+                fullName: "G Protein-Coupled Receptors Database",
+                url: "https://gpcrdb.org/",
+                dataType: "GPCR 序列、结构、突变",
+                function: "GPCR 家族权威数据",
+                services: [
+                    "突变效应图谱",
+                    "受体-配体相互作用浏览器",
+                    "蛇形图 (Snake plot) 可视化",
+                    "结构相似性搜索"
+                ],
+                scenario: "GPCR 药物设计与功能研究"
+            },
+            {
+                type: "专题库",
+                name: "IMGT",
+                fullName: "International ImMunoGeneTics",
+                url: "https://www.imgt.org/",
+                dataType: "免疫分子基因、序列、结构",
+                function: "免疫学黄金标准库",
+                services: [
+                    "IMGT/V-QUEST 序列分析",
+                    "CDR (互补决定区) 边界定义",
+                    "2D/3D 结构交互式分析",
+                    "抗体工程辅助工具"
+                ],
+                scenario: "抗体药物研发"
+            },
+            {
+                type: "专题库",
+                name: "NDB",
+                fullName: "Nucleic Acid Database",
+                url: "https://ndbserver.rutgers.edu/",
+                dataType: "核酸实验结构数据",
+                function: "核酸结构特定收录",
+                services: [
+                    "核酸特定几何参数搜索",
+                    "基序 (Motif) 查找",
+                    "DNA/RNA 结构分类浏览",
+                    "核酸-蛋白复合物分析"
+                ],
+                scenario: "核酸基础研究、疫苗研发"
+            },
+            {
+                type: "专题库",
+                name: "DisProt",
+                fullName: "Database of Protein Disorder",
+                url: "https://disprot.org/",
+                dataType: "内在无序蛋白数据",
+                function: "无序区域实验验证数据",
+                services: [
+                    "无序特征可视化",
+                    "功能位点注释 (如磷酸化)",
+                    "序列-无序倾向图",
+                    "人工审编文献证据"
+                ],
+                scenario: "无序蛋白功能、靶向药物"
+            },
+            {
+                type: "专题库",
+                name: "PDBTM",
+                fullName: "PDB Transmembrane Proteins",
+                url: "http://pdbtm.enzim.hu/",
+                dataType: "跨膜蛋白结构注释",
+                function: "膜蛋白空间排布",
+                services: [
+                    "TMDET 算法自动检测",
+                    "膜平面相对位置可视化",
+                    "跨膜片段序列与结构展示",
+                    "拓扑结构分类"
+                ],
+                scenario: "通道、转运、信号传导研究"
+            },
+            {
+                type: "专题库",
+                name: "OPM",
+                fullName: "Orientations of Proteins in Membranes",
+                url: "https://opm.phar.umich.edu/",
+                dataType: "膜蛋白空间取向",
+                function: "跨膜螺旋预测定位",
+                services: [
+                    "PPM 方法计算膜位置",
+                    "膜深度/倾斜角度参数",
+                    "超家族分类浏览",
+                    "3D 膜环境模拟展示"
+                ],
+                scenario: "膜蛋白相关研究"
+            },
+            {
+                type: "预测库",
+                name: "SWISS-MODEL",
+                fullName: "SWISS-MODEL Repository",
+                url: "https://swissmodel.expasy.org/",
+                dataType: "同源模建结构数据",
+                function: "高精度同源模建",
+                services: [
+                    "全自动同源建模工作流",
+                    "GMQE/QMEAN 质量评估",
+                    "模板搜索与比对可视化",
+                    "交互式模型编辑"
+                ],
+                scenario: "实验未知结构蛋白建模"
+            },
+            {
+                type: "预测库",
+                name: "AlphaFoldDB",
+                fullName: "AlphaFold Protein Structure Database",
+                url: "https://alphafold.ebi.ac.uk/",
+                dataType: "AI 预测三维结构",
+                function: "全基因组级结构覆盖",
+                services: [
+                    "pLDDT 置信度颜色编码",
+                    "PAE (预测对齐误差) 矩阵",
+                    "交互式 3D 结构展示",
+                    "序列-结构同步导航"
+                ],
+                scenario: "结构覆盖扩展、模型训练"
             }
         ];
 
+        // 颜色映射
         const typeColors = {
             "通用库": "bg-blue-100 text-blue-800 border-blue-200",
             "分类库": "bg-indigo-100 text-indigo-800 border-indigo-200",
             "注释库": "bg-purple-100 text-purple-800 border-purple-200",
-            "综合库": "bg-green-100 text-green-800 border-green-200"
+            "综合库": "bg-green-100 text-green-800 border-green-200",
+            "专题库": "bg-orange-100 text-orange-800 border-orange-200",
+            "预测库": "bg-rose-100 text-rose-800 border-rose-200"
         };
 
         const App = () => {
             const [searchTerm, setSearchTerm] = useState("");
             const [selectedType, setSelectedType] = useState("全部");
+            const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
 
             const types = ["全部", ...new Set(databaseData.map(d => d.type))];
 
-            const filteredData = databaseData.filter(item => {
-                if (selectedType !== "全部" && item.type !== selectedType) return false;
+            // 排序逻辑
+            const requestSort = (key) => {
+                let direction = 'ascending';
+                if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+                    direction = 'descending';
+                }
+                setSortConfig({ key, direction });
+            };
+
+            // 过滤和排序数据
+            const filteredData = useMemo(() => {
+                let data = [...databaseData];
+
+                // 过滤
+                if (selectedType !== "全部") {
+                    data = data.filter(item => item.type === selectedType);
+                }
                 if (searchTerm) {
                     const lowerTerm = searchTerm.toLowerCase();
-                    return item.name.toLowerCase().includes(lowerTerm) ||
-                           item.function.toLowerCase().includes(lowerTerm) ||
-                           item.services.some(s => s.toLowerCase().includes(lowerTerm));
+                    data = data.filter(item => 
+                        (item.name && item.name.toLowerCase().includes(lowerTerm)) ||
+                        (item.dataType && item.dataType.toLowerCase().includes(lowerTerm)) ||
+                        (item.function && item.function.toLowerCase().includes(lowerTerm)) ||
+                        (item.services && item.services.some(s => s.toLowerCase().includes(lowerTerm))) ||
+                        (item.scenario && item.scenario.toLowerCase().includes(lowerTerm)) || 
+                        (item.note && item.note.toLowerCase().includes(lowerTerm))
+                    );
                 }
-                return true;
-            });
+
+                // 排序
+                if (sortConfig.key) {
+                    data.sort((a, b) => {
+                        if (a[sortConfig.key] < b[sortConfig.key]) {
+                            return sortConfig.direction === 'ascending' ? -1 : 1;
+                        }
+                        if (a[sortConfig.key] > b[sortConfig.key]) {
+                            return sortConfig.direction === 'ascending' ? 1 : -1;
+                        }
+                        return 0;
+                    });
+                }
+                return data;
+            }, [searchTerm, selectedType, sortConfig]);
+
+            // 渲染排序图标
+            const getSortIcon = (key) => {
+                if (sortConfig.key !== key) return <i className="ph ph-arrows-down-up opacity-30 ml-1"></i>;
+                return sortConfig.direction === 'ascending' 
+                    ? <i className="ph ph-arrow-up text-blue-600 ml-1"></i> 
+                    : <i className="ph ph-arrow-down text-blue-600 ml-1"></i>;
+            };
 
             return (
                 <div className="min-h-screen pb-12">
+                    {/* Header */}
                     <div className="glass-header sticky top-0 z-50">
-                        <div className="max-w-5xl mx-auto px-6 py-6">
-                            <div>
-                                <h1 className="text-2xl font-bold text-slate-800">
-                                    结构生物信息学核心数据库导航
-                                </h1>
-                                <p className="text-sm text-slate-500 mt-1">
-                                    精选常用数据库与核心服务说明
-                                </p>
-                            </div>
-                            <div className="flex gap-3 mt-4">
-                                <input 
-                                    type="text" 
-                                    placeholder="搜索..." 
-                                    className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <select 
-                                    className="px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                                    value={selectedType}
-                                    onChange={(e) => setSelectedType(e.target.value)}
-                                >
-                                    {types.map(type => <option key={type}>{type}</option>)}
-                                </select>
+                        {/* 调整容器宽度以适应更多内容 */}
+                        <div className="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <h1 className="text-2xl font-bold text-slate-800 flex items-center">
+                                        <i className="ph ph-dna text-3xl text-blue-600 mr-2"></i>
+                                        结构生物信息学数据库导航
+                                    </h1>
+                                    <p className="text-sm text-slate-500 mt-1">
+                                        包含核心服务与工具说明（基于文献原文补充）
+                                    </p>
+                                </div>
+                                
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <div className="relative">
+                                        <i className="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                        <input 
+                                            type="text" 
+                                            placeholder="搜索服务、功能、名称..." 
+                                            className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none w-full sm:w-64 text-sm"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="relative">
+                                        <i className="ph ph-funnel absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                        <select 
+                                            className="pl-10 pr-8 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none appearance-none bg-white w-full sm:w-auto text-sm cursor-pointer hover:bg-slate-50 transition-colors"
+                                            value={selectedType}
+                                            onChange={(e) => setSelectedType(e.target.value)}
+                                        >
+                                            {types.map(type => <option key={type} value={type}>{type}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <main className="max-w-5xl mx-auto px-6 py-8">
-                        <div className="space-y-4">
-                            {filteredData.map((item, idx) => (
-                                <div key={idx} className="bg-white rounded-lg border border-slate-200 p-6 hover:shadow-md transition">
-                                    <div className="flex items-start justify-between gap-4 mb-3">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${typeColors[item.type]}`}>
-                                                    {item.type}
-                                                </span>
-                                                <h2 className="text-xl font-bold text-slate-800">{item.name}</h2>
-                                            </div>
-                                            <p className="text-xs text-slate-500 mt-1">{item.fullName}</p>
-                                        </div>
-                                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700">
-                                            访问
-                                        </a>
-                                    </div>
-                                    <p className="text-sm text-slate-700 mb-3">{item.function}</p>
-                                    <div className="grid md:grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <p className="font-semibold text-slate-800 text-xs uppercase mb-2">数据类型</p>
-                                            <p className="text-slate-600">{item.dataType}</p>
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-slate-800 text-xs uppercase mb-2">核心服务</p>
-                                            <ul className="text-slate-600 list-disc list-inside space-y-1">
-                                                {item.services.slice(0, 3).map((s, i) => <li key={i} className="text-xs">{s}</li>)}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                        {filteredData.length === 0 && (
-                            <div className="text-center py-12">
-                                <p className="text-slate-500">未找到匹配的数据库</p>
+                    {/* Content */}
+                    <main className="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        
+                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors whitespace-nowrap" onClick={() => requestSort('type')}>
+                                                <div className="flex items-center">类别 {getSortIcon('type')}</div>
+                                            </th>
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors min-w-[140px]" onClick={() => requestSort('name')}>
+                                                <div className="flex items-center">名称 {getSortIcon('name')}</div>
+                                            </th>
+                                            {/* 调整列宽 */}
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors w-[15%]" onClick={() => requestSort('dataType')}>
+                                                <div className="flex items-center">数据类型 {getSortIcon('dataType')}</div>
+                                            </th>
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors w-[15%]" onClick={() => requestSort('function')}>
+                                                <div className="flex items-center">功能定位 {getSortIcon('function')}</div>
+                                            </th>
+                                            {/* 新增列：核心服务与工具 */}
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors w-[25%]" onClick={() => requestSort('services')}>
+                                                <div className="flex items-center">核心服务与工具 <i className="ph ph-wrench ml-1 text-slate-400"></i></div>
+                                            </th>
+                                            <th className="px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors w-[15%]" onClick={() => requestSort('scenario')}>
+                                                <div className="flex items-center">应用场景 {getSortIcon('scenario')}</div>
+                                            </th>
+                                            <th className="px-4 py-4 text-center">访问</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {filteredData.length > 0 ? (
+                                            filteredData.map((item, index) => (
+                                                <tr key={index} className="hover:bg-slate-50 transition-colors group">
+                                                    <td className="px-4 py-4 align-top whitespace-nowrap">
+                                                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium border whitespace-nowrap ${typeColors[item.type] || 'bg-gray-100 text-gray-800'}`}>
+                                                            {item.type}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-4 align-top">
+                                                        <div className="flex flex-col">
+                                                            <span className="font-bold text-slate-800 text-lg">{item.name}</span>
+                                                            <span className="text-xs text-slate-400 font-medium mb-1">{item.fullName}</span>
+                                                            {item.note && (
+                                                                <span className="inline-flex items-center text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded w-fit mt-1">
+                                                                    <i className="ph-fill ph-info mr-1"></i> {item.note}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-4 py-4 text-sm text-slate-600 align-top leading-relaxed">
+                                                        {item.dataType}
+                                                    </td>
+                                                    <td className="px-4 py-4 text-sm text-slate-600 align-top leading-relaxed">
+                                                        {item.function}
+                                                    </td>
+                                                    {/* 新增列内容 */}
+                                                    <td className="px-4 py-4 text-sm text-slate-700 align-top leading-relaxed bg-slate-50/50">
+                                                        <ul className="list-none space-y-1">
+                                                            {item.services && item.services.map((service, i) => (
+                                                                <li key={i} className="flex items-start">
+                                                                    <i className="ph-fill ph-check-circle text-blue-400 mt-1 mr-1.5 text-xs flex-shrink-0"></i>
+                                                                    <span className="text-xs">{service}</span>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </td>
+                                                    <td className="px-4 py-4 text-sm text-slate-600 align-top leading-relaxed">
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {item.scenario && item.scenario.split('、').map((tag, i) => (
+                                                                <span key={i} className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs border border-slate-200">
+                                                                    {tag}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-4 py-4 align-top text-center">
+                                                        <a 
+                                                            href={item.url} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200 shadow-sm border border-blue-100"
+                                                            title={`访问 ${item.name} 官网`}
+                                                        >
+                                                            <i className="ph-bold ph-arrow-square-out text-base"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="7" className="px-6 py-12 text-center text-slate-500">
+                                                    <div className="flex flex-col items-center">
+                                                        <i className="ph ph-magnifying-glass text-4xl mb-3 text-slate-300"></i>
+                                                        <p>未找到匹配的数据库</p>
+                                                        <button 
+                                                            onClick={() => {setSearchTerm(''); setSelectedType('全部');}}
+                                                            className="mt-2 text-blue-600 hover:underline text-sm"
+                                                        >
+                                                            清除筛选条件
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
-                        )}
+                            <div className="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+                                <span>共展示 {filteredData.length} 个数据库资源</span>
+                                <span className="hidden sm:inline">数据来源: 清华大学学报(自然科学版) 2025年第65卷第12期</span>
+                            </div>
+                        </div>
+
+                        {/* Tip Section */}
+                        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-blue-50 border border-blue-100 rounded-xl p-5">
+                                <h3 className="text-blue-900 font-semibold mb-2 flex items-center">
+                                    <i className="ph-fill ph-lightbulb mr-2"></i> 专家提示
+                                </h3>
+                                <p className="text-sm text-blue-800 leading-relaxed">
+                                    对于<strong>药物设计</strong>，PDBbind 和 ChEMBL 是必不可少的资源；
+                                    而进行<strong>进化分析</strong>时，SCOP 和 CATH 提供的结构分类提供了比序列同源性更深层的视角。
+                                    如果研究<strong>无序蛋白</strong>，请务必参考 DisProt，因为 PDB 中往往缺失这部分信息。
+                                </p>
+                            </div>
+                            <div className="bg-purple-50 border border-purple-100 rounded-xl p-5">
+                                <h3 className="text-purple-900 font-semibold mb-2 flex items-center">
+                                    <i className="ph-fill ph-robot mr-2"></i> AI 与数据库
+                                </h3>
+                                <p className="text-sm text-purple-800 leading-relaxed">
+                                    AlphaFoldDB 极大地扩展了结构覆盖范围，但其为<strong>预测模型</strong>。在进行关键机理研究时，
+                                    建议优先使用 PDB 中的实验结构作为“金标准”，并用预测结构作为补充假说。
+                                </p>
+                            </div>
+                        </div>
+
                     </main>
                 </div>
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        const rootElement = document.getElementById('root');
+        if (rootElement) {
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(<App />);
+        } else {
+            console.error("Failed to find the root element");
+        }
     </script>
 </body>
 </html>

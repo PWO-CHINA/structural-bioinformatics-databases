@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>结构生物学数据库演进史</title>
+    <title>结构生物学数据库演进史：技术与数据的双螺旋</title>
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; background-color: #f8fafc; }
         .serif { font-family: 'Noto Serif SC', serif; }
@@ -18,111 +24,400 @@
             left: 50%;
             top: 0;
             bottom: 0;
-            width: 2px;
+            width: 4px;
             background: linear-gradient(to bottom, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
             transform: translateX(-50%);
+            border-radius: 4px;
+        }
+        /* Mobile adjustment */
+        @media (max-width: 768px) {
+            .timeline-line { left: 2rem; }
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState } = React;
 
+        // 数据源：整合了数据库（Main）与技术（Base）
         const timelineData = [
-            { year: 1958, category: "tech", era: "foundation", name: "X-ray 晶体学奠基", desc: "DNA 双螺旋与血红蛋白结构解析" },
-            { year: 1971, category: "db", era: "foundation", name: "PDB 创立", provider: "Brookhaven National Lab", desc: "首个生物大分子三维结构数据库（7个初始结构）" },
-            { year: 1985, category: "tech", era: "foundation", name: "NMR 波谱学应用", desc: "在溶液条件下捕捉分子动态变化" },
-            { year: 2002, category: "db", era: "integration", name: "EMDB 建立", provider: "EBI", desc: "冷冻电镜三维密度图数据库" },
-            { year: 2013, category: "tech", era: "integration", name: "Cryo-EM 分辨率革命", desc: "直接电子探测器突破，冷冻电镜成为主流" },
-            { year: 2020, category: "tech", era: "ai", name: "AlphaFold2 突破", desc: "CASP14 竞赛历史性突破，深度学习预测准确度接近实验" },
-            { year: 2021, category: "db", era: "ai", name: "AlphaFoldDB 上线", provider: "DeepMind & EBI", desc: "AI 时代：全基因组级预测结构数据库，覆盖数千万条目", highlight: true }
+            // --- 纪元 1: 实验奠基 (1950s - 1990s) ---
+            {
+                year: 1958,
+                category: "tech",
+                era: "foundation",
+                name: "X-ray 晶体学奠基",
+                description: "以 DNA 双螺旋结构和血红蛋白结构的解析为标志，X 射线晶体学成为解析生物大分子原子分辨率图像的奠基性技术。",
+                icon: "ph-crystal-ball"
+            },
+            {
+                year: 1971,
+                category: "db",
+                era: "foundation",
+                name: "PDB (Protein Data Bank)",
+                provider: "Brookhaven National Laboratory (BNL)",
+                description: "【基石】为存储日益增长的晶体学数据，全球首个生物大分子三维结构数据库诞生。起始仅包含 7 个结构。",
+                tag: "核心实验库",
+                icon: "ph-bank"
+            },
+            {
+                year: 1985,
+                category: "tech",
+                era: "foundation",
+                name: "NMR 波谱学应用",
+                description: "核磁共振波谱学 (NMR) 独辟蹊径，开始在溶液等近生理条件下捕捉分子的动态变化和柔性区域信息，弥补了晶体学的不足。",
+                icon: "ph-wave-sine"
+            },
+            {
+                year: 1991,
+                category: "db",
+                era: "foundation",
+                name: "NDB (Nucleic Acid Database)",
+                provider: "Rutgers University",
+                description: "随着对 DNA/RNA 结构研究的深入，专门建立核酸数据库，专注于核酸及其复合物结构的存储与分析。",
+                tag: "专题数据库",
+                icon: "ph-dna"
+            },
+            {
+                year: 1994,
+                category: "db",
+                era: "foundation",
+                name: "SCOP",
+                provider: "MRC Laboratory of Molecular Biology",
+                description: "利用积累的结构数据，引入专家人工审编，建立了以“结构-进化”关系为核心的蛋白质分类体系。",
+                tag: "结构分类库",
+                icon: "ph-tree-structure"
+            },
+            {
+                year: 1997,
+                category: "db",
+                era: "foundation",
+                name: "Pfam",
+                provider: "Sanger Institute / EBI",
+                description: "面对序列数据的激增，基于隐马尔可夫模型 (HMM) 构建蛋白质家族数据库，实现大规模自动化注释。",
+                tag: "功能注释库",
+                icon: "ph-tag"
+            },
+            {
+                year: 1999,
+                category: "db",
+                era: "foundation",
+                name: "wwPDB 联盟成立",
+                provider: "RCSB, PDBe, PDBj",
+                description: "【里程碑】为应对全球数据增长，美、欧、日三方联合成立 wwPDB，统一全球数据标准与管理。",
+                tag: "组织变革",
+                icon: "ph-globe",
+                isMilestone: true
+            },
+            
+            // --- 纪元 2: 技术爆炸 (2000s - 2010s) ---
+            {
+                year: 2002,
+                category: "db",
+                era: "integration",
+                name: "EMDB",
+                provider: "EBI",
+                description: "顺应早期冷冻电镜和电子断层扫描技术的发展，专门建立用于存储三维密度图 (Density Maps) 的数据库。",
+                tag: "冷冻电镜",
+                icon: "ph-aperture"
+            },
+            {
+                year: 2004,
+                category: "db",
+                era: "integration",
+                name: "PDBbind",
+                provider: "上海有机化学研究所 (SIOC)",
+                description: "伴随药物研发需求的增长，系统收集蛋白质-配体复合物结构及亲和力数据，服务于药物设计。",
+                tag: "药物设计",
+                icon: "ph-pill"
+            },
+            {
+                year: 2013,
+                category: "tech",
+                era: "integration",
+                name: "Cryo-EM 分辨率革命",
+                description: "直接电子探测器和图像处理算法的突破引发“分辨率革命”。冷冻电镜成为解析巨大复合物和膜蛋白的主流方法。",
+                icon: "ph-snowflake"
+            },
+            {
+                year: 2016,
+                category: "db",
+                era: "integration",
+                name: "EMPIAR",
+                provider: "EBI",
+                description: "【响应分辨率革命】为支持冷冻电镜算法开发，建立存储体量巨大的原始二维图像数据 (Raw Images) 的公共归档。",
+                tag: "原始数据",
+                icon: "ph-image"
+            },
+
+            // --- 纪元 3: AI 革命 (2020s - Present) ---
+            {
+                year: 2020,
+                category: "tech",
+                era: "ai",
+                name: "Deep Learning & CASP14",
+                description: "AlphaFold2 在 CASP14 竞赛中取得历史性突破，证明深度学习能以接近实验精度的水平预测蛋白质结构。",
+                icon: "ph-cpu"
+            },
+            {
+                year: 2021,
+                category: "db",
+                era: "ai",
+                name: "AlphaFold DB",
+                provider: "DeepMind & EBI",
+                description: "【AI 爆发】基于 AI 模型发布海量预测结构。将结构生物学从“实验测定”拓展至全基因组级别的“计算预测”。",
+                tag: "AI 预测库",
+                icon: "ph-brain",
+                highlight: true
+            },
+            {
+                year: 2021,
+                category: "db",
+                era: "ai",
+                name: "ESM Metagenomic Atlas",
+                provider: "Meta AI",
+                description: "利用大语言模型 ESMFold 极快的推理速度，对数亿宏基因组序列进行结构预测，探索“蛋白质暗物质”。",
+                tag: "AI 预测库",
+                icon: "ph-planet"
+            },
+            {
+                year: 2022,
+                category: "db",
+                era: "ai",
+                name: "PDBc 加入 wwPDB",
+                provider: "清华大学 / 中国",
+                description: "【新成员】中国蛋白质数据库 (PDBc) 正式成为 wwPDB 成员，共同维护这一全球生命科学的数字基石。",
+                tag: "组织变革",
+                icon: "ph-flag-banner",
+                isMilestone: true
+            }
         ];
 
+        // 纪元配置
         const eras = {
-            foundation: { title: "1950s-1990s: 实验奠基与知识体系", color: "blue" },
-            integration: { title: "2000s-2010s: 技术爆炸与多模态整合", color: "emerald" },
-            ai: { title: "2020s-Present: AI 革命与数字孪生", color: "purple" }
+            foundation: {
+                title: "1950s - 1990s: 实验奠基与知识体系",
+                desc: "X-ray 与 NMR 技术奠定基础，PDB 建立",
+                color: "blue",
+                bg: "bg-blue-50",
+                border: "border-blue-500",
+                text: "text-blue-800",
+                badge: "bg-blue-100 text-blue-800"
+            },
+            integration: {
+                title: "2000s - 2010s: 技术爆炸与多模态整合",
+                desc: "Cryo-EM 分辨率革命，数据类型多样化",
+                color: "emerald",
+                bg: "bg-emerald-50",
+                border: "border-emerald-500",
+                text: "text-emerald-800",
+                badge: "bg-emerald-100 text-emerald-800"
+            },
+            ai: {
+                title: "2020s - Present: AI 革命与数字孪生",
+                desc: "深度学习驱动，从结构解析迈向理性设计",
+                color: "purple",
+                bg: "bg-purple-50",
+                border: "border-purple-500",
+                text: "text-purple-800",
+                badge: "bg-purple-100 text-purple-800"
+            }
         };
 
         const TimelineItem = ({ item }) => {
+            const eraStyle = eras[item.era];
+            // db 在右侧 (Main)，tech 在左侧 (Base)
             const isDb = item.category === 'db';
+            
+            // 样式区分：
+            // Database: 白色背景，彩色边框，更突出
+            // Tech: 深色背景，科技感，作为基调
+            
             return (
-                <div className={`relative flex items-center w-full mb-8 ${isDb ? 'md:flex-row-reverse' : ''}`}>
-                    <div className={`absolute left-8 md:left-1/2 w-3 h-3 -ml-1.5 rounded-full z-10 border-2 border-white shadow-sm ${
-                        isDb ? 'bg-blue-500' : 'bg-slate-600'
-                    }`}></div>
-                    <div className={`w-[calc(100%-3rem)] md:w-[45%] ml-12 md:ml-0 ${isDb ? 'md:ml-[55%]' : 'md:mr-[55%]'} ${item.highlight ? 'scale-105' : ''}`}>
-                        <div className={`p-4 rounded-lg border transition-all ${
-                            isDb 
-                                ? `bg-white shadow-sm ${item.highlight ? 'ring-2 ring-purple-100 border-purple-300' : 'border-slate-200'}` 
-                                : 'bg-slate-800 border-slate-700 text-slate-100'
-                        }`}>
+                <div className={`relative flex items-center justify-between md:justify-normal w-full mb-8 ${isDb ? '' : 'md:flex-row-reverse'}`}>
+                    
+                    {/* 中轴线上的点 */}
+                    <div className={`
+                        absolute left-8 md:left-1/2 w-4 h-4 -ml-2 rounded-full z-10 border-2 border-white shadow-sm
+                        ${isDb ? eraStyle.bg.replace('50', '500') : 'bg-slate-600'}
+                    `}></div>
+
+                    {/* 内容区域 */}
+                    {/* PC端布局逻辑：
+                        - 数据库(isDb=true): 显示在右侧 (ml-auto)
+                        - 技术(isDb=false): 显示在左侧 (mr-auto)
+                        
+                        移动端布局逻辑：
+                        - 统一显示在右侧，通过颜色区分
+                     */}
+                    <div className={`
+                        w-[calc(100%-4rem)] md:w-[45%] ml-16 md:ml-0
+                        ${isDb ? 'md:ml-[55%]' : 'md:mr-[55%]'}
+                        ${item.highlight ? 'scale-105 origin-center' : ''}
+                    `}>
+                        <div className={`
+                            relative p-5 rounded-xl border transition-all duration-300
+                            ${isDb 
+                                ? `bg-white shadow-sm hover:shadow-md ${item.highlight ? 'ring-2 ring-purple-100 border-purple-300' : 'border-slate-200'}` 
+                                : 'bg-slate-800 border-slate-700 shadow-md text-slate-100'
+                            }
+                            ${item.isMilestone && isDb ? 'border-l-4 ' + eraStyle.border : ''}
+                        `}>
+                            {/* 标签栏 */}
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-xl font-bold serif text-slate-900">{item.year}</span>
-                                <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                                    isDb ? 'bg-blue-100 text-blue-800' : 'bg-slate-700 text-slate-300'
-                                }`}>
-                                    {isDb ? '数据库' : '技术基线'}
+                                <span className={`text-xl font-bold serif ${isDb ? eraStyle.text : 'text-slate-300'}`}>
+                                    {item.year}
                                 </span>
+                                {isDb ? (
+                                    <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-medium ${eraStyle.badge}`}>
+                                        {item.tag}
+                                    </span>
+                                ) : (
+                                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full font-medium bg-slate-700 text-slate-300 border border-slate-600">
+                                        技术基线
+                                    </span>
+                                )}
                             </div>
-                            <h3 className={`font-bold mb-1 ${isDb ? 'text-slate-800' : 'text-white'}`}>{item.name}</h3>
-                            {isDb && <p className={`text-xs ${isDb ? 'text-slate-500' : 'text-slate-300'}`}>{item.provider}</p>}
-                            <p className={`text-sm mt-2 leading-relaxed ${isDb ? 'text-slate-600' : 'text-slate-300'}`}>{item.desc}</p>
+
+                            {/* 标题 */}
+                            <h3 className={`text-lg font-bold mb-1 flex items-center gap-2 ${isDb ? 'text-slate-800' : 'text-white'}`}>
+                                <i className={`ph-fill ${item.icon} ${isDb ? 'text-slate-400' : 'text-blue-400'}`}></i>
+                                {item.name}
+                            </h3>
+
+                            {/* 提供方 (仅 DB) */}
+                            {isDb && (
+                                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mb-3 pb-2 border-b border-slate-100">
+                                    <i className="ph ph-buildings"></i>
+                                    {item.provider}
+                                </div>
+                            )}
+
+                            {/* 描述 */}
+                            <p className={`text-sm leading-relaxed ${isDb ? 'text-slate-600' : 'text-slate-300'}`}>
+                                {item.description}
+                            </p>
+                            
+                            {/* 技术卡片的特殊标记 */}
+                            {!isDb && (
+                                <div className="absolute top-1/2 -right-3 md:-right-2 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-l-[8px] border-l-slate-800 hidden md:block"></div>
+                            )}
+                            {!isDb && (
+                                <div className="absolute top-1/2 -left-3 md:hidden w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-slate-800 block"></div>
+                            )}
+                             {isDb && (
+                                <div className="absolute top-1/2 -left-3 w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-white hidden md:block"></div>
+                            )}
+
                         </div>
                     </div>
                 </div>
             );
         };
 
+        const EraHeader = ({ eraKey }) => {
+            const style = eras[eraKey];
+            return (
+                <div className="sticky top-0 z-20 bg-f8fafc/95 backdrop-blur-sm py-8 mb-8 flex justify-center">
+                    <div className={`
+                        px-8 py-3 rounded-full shadow-sm border-2
+                        bg-white ${style.border}
+                        flex flex-col items-center text-center max-w-lg
+                    `}>
+                        <h2 className={`text-lg font-bold ${style.text}`}>{style.title}</h2>
+                        <span className="text-xs text-slate-500 mt-1 font-medium">{style.desc}</span>
+                    </div>
+                </div>
+            );
+        };
+
         const App = () => {
-            const groupedData = {};
-            timelineData.forEach(item => {
-                if (!groupedData[item.era]) groupedData[item.era] = [];
-                groupedData[item.era].push(item);
+            const groupedData = timelineData.reduce((acc, item) => {
+                if (!acc[item.era]) acc[item.era] = [];
+                acc[item.era].push(item);
+                return acc;
+            }, {});
+
+            // 排序：年份升序
+            Object.keys(groupedData).forEach(key => {
+                groupedData[key].sort((a, b) => a.year - b.year);
             });
 
             return (
-                <div className="min-h-screen pb-20">
-                    <header className="bg-white border-b border-slate-200 py-16 mb-8">
-                        <div className="max-w-4xl mx-auto px-4 text-center">
-                            <h1 className="text-4xl font-bold text-slate-900 serif mb-4">
+                <div className="min-h-screen pb-20 overflow-x-hidden">
+                    {/* Header */}
+                    <header className="bg-white border-b border-slate-200 py-16 mb-8 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-emerald-500 to-purple-500"></div>
+                        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+                            <div className="inline-flex items-center justify-center p-3 bg-slate-100 rounded-full mb-4">
+                                <i className="ph-duotone ph-dna text-3xl text-slate-600"></i>
+                            </div>
+                            <h1 className="text-3xl md:text-5xl font-bold text-slate-900 serif mb-6">
                                 结构生物学数据库演进史
                             </h1>
-                            <p className="text-slate-600 text-lg">
-                                探索技术突破与数据增长的<span className="font-bold">双螺旋</span>效应
+                            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed text-lg">
+                                探索技术突破与数据增长的<span className="font-bold text-slate-900">双螺旋 (Double Helix)</span> 效应。
                             </p>
+                            
+                            <div className="flex justify-center gap-8 mt-8 text-sm font-medium">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-3 h-3 rounded-full bg-slate-800"></span>
+                                    <span className="text-slate-700">技术基线 (Technology)</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-3 h-3 rounded-full bg-white border border-slate-300 shadow-sm"></span>
+                                    <span className="text-slate-700">数据库主线 (Databases)</span>
+                                </div>
+                            </div>
                         </div>
                     </header>
 
+                    {/* Timeline Container */}
                     <div className="max-w-6xl mx-auto px-4 relative">
+                        {/* 垂直中线 */}
                         <div className="timeline-line"></div>
 
-                        {Object.entries(groupedData).map(([eraKey, items]) => (
-                            <div key={eraKey} className="mb-20">
-                                <div className="flex justify-center mb-8">
-                                    <div className={`px-6 py-3 rounded-full bg-white shadow-sm border-2 ${
-                                        eraKey === 'foundation' ? 'border-blue-500' :
-                                        eraKey === 'integration' ? 'border-emerald-500' :
-                                        'border-purple-500'
-                                    }`}>
-                                        <h2 className="font-bold text-center">{eras[eraKey].title}</h2>
-                                    </div>
-                                </div>
-                                {items.map((item, idx) => <TimelineItem key={idx} item={item} />)}
-                            </div>
-                        ))}
+                        {/* Era 1 */}
+                        <EraHeader eraKey="foundation" />
+                        <div className="mb-20">
+                            {groupedData.foundation.map((item, idx) => (
+                                <TimelineItem key={item.name} item={item} />
+                            ))}
+                        </div>
 
-                        <div className="flex justify-center pt-8">
-                            <div className="bg-slate-900 text-white px-8 py-4 rounded-xl shadow-xl border border-slate-700 text-center">
-                                <p className="font-bold text-lg">未来展望</p>
-                                <p className="text-sm text-slate-400">迈向 AI 原生与数字孪生架构</p>
+                        {/* Era 2 */}
+                        <EraHeader eraKey="integration" />
+                        <div className="mb-20">
+                            {groupedData.integration.map((item, idx) => (
+                                <TimelineItem key={item.name} item={item} />
+                            ))}
+                        </div>
+
+                        {/* Era 3 */}
+                        <EraHeader eraKey="ai" />
+                        <div className="mb-12">
+                            {groupedData.ai.map((item, idx) => (
+                                <TimelineItem key={item.name} item={item} />
+                            ))}
+                        </div>
+                        
+                        {/* Future Indicator */}
+                        <div className="flex justify-center relative z-10 pt-8">
+                            <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white px-8 py-4 rounded-xl shadow-xl flex flex-col items-center gap-2 border border-slate-700">
+                                <div className="flex items-center gap-2">
+                                    <i className="ph-fill ph-arrow-down animate-bounce"></i>
+                                    <span className="font-bold text-lg">未来展望</span>
+                                </div>
+                                <span className="text-sm text-slate-400">迈向 AI 原生 (AI-Native) 与数字孪生架构</span>
                             </div>
                         </div>
+
                     </div>
                     
-                    <footer className="text-center text-slate-400 text-sm py-12 mt-12">
-                        基于结构生物学相关文献整理
+                    <footer className="text-center text-slate-400 text-sm py-12">
+                        基于《清华大学学报(自然科学版)》2025年第65卷第12期内容整理
                     </footer>
                 </div>
             );
